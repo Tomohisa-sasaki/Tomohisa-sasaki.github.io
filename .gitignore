@@ -3,3 +3,9 @@ __pycache__/  # Pythonのバイトコードキャッシュ（*.pycが入る）�
 .history/     # VS CodeのLocal History等が作る履歴ディレクトリ。プロジェクトには不要
 *.pyc         # Pythonのコンパイル済みファイル。不要
 .DS_Store     # macOS Finderのメタファイル。毎回邪魔なので常に無視
+
+.history/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store

@@ -1,5 +1,0 @@
-.venv/        # Python仮想環境一式。超巨大＆環境依存。コミットしないのが鉄則
-__pycache__/  # Pythonのバイトコードキャッシュ（*.pycが入る）。不要
-.history/     # VS CodeのLocal History等が作る履歴ディレクトリ。プロジェクトには不要
-*.pyc         # Pythonのコンパイル済みファイル。不要
-.DS_Store     # macOS Finderのメタファイル。毎回邪魔なので常に無視
