@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Muscle Log{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_green.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="site-body">
+    <header class="site-header">
+        <div class="container header-inner">
+            <div class="brand">
+                <span class="brand-logo">Muscle Console</span>
+                <h1 class="site-title">Adaptive Training Dashboard</h1>
+                <p class="site-subtitle">Track every lift, analyze progress, and tailor your next session with clarity.</p>
+            </div>
+            <nav class="nav">
+                <a class="nav-link" href="{{ url_for('home') }}">My Page</a>
+                <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a class="nav-link" href="{{ url_for('analytics') }}">Analytics</a>
+                <a class="nav-link" href="{{ url_for('schedule') }}">Schedule</a>
+                <a class="nav-link" href="{{ url_for('nutrition') }}">Nutrition Log</a>
+                <a class="nav-link nav-primary" href="{{ url_for('new_workouts') }}">New Entry</a>
+                <label class="theme-switcher">
+                    <span>Theme</span>
+                    <select id="themeSelect" class="theme-select">
+                        <option value="green">Emerald</option>
+                        <option value="navy">Midnight</option>
+                        <option value="rose">Rose Quartz</option>
+                        <option value="light">Luminous</option>
+                    </select>
+                </label>
+            </nav>
+        </div>
+    </header>
+
+    <main class="site-main">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <small>© {{ 2025 }} Muscle Log</small>
+            <span class="footer-note">Consistency builds strength.</span>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      (function () {
+        const root = document.documentElement;
+        const select = document.getElementById("themeSelect");
+        const stored = localStorage.getItem("muscle-log-theme") || "green";
+        root.setAttribute("data-theme", stored);
+        if (select) {
+          select.value = stored;
+          select.addEventListener("change", (event) => {
+            const theme = event.target.value || "green";
+            root.setAttribute("data-theme", theme);
+            localStorage.setItem("muscle-log-theme", theme);
+          });
+        }
+      })();
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

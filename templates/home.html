@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block title %}My Page - Muscle Log{% endblock %}
+
+{% block content %}
+  <section class="section home-intro">
+    <div class="home-cards">
+      <article class="home-card home-card-primary">
+        <header>
+          <h3>Today's Targets</h3>
+          <span>{{ summary.target.calories }} kcal</span>
+        </header>
+        <ul>
+          <li>Protein <strong>{{ summary.target.protein }} g</strong></li>
+          <li>Fat <strong>{{ summary.target.fat }} g</strong></li>
+          <li>Carbs <strong>{{ summary.target.carb }} g</strong></li>
+        </ul>
+      </article>
+      <article class="home-card">
+        <header>
+          <h3>Consumed</h3>
+          <span>{{ summary.consumed.calories }} kcal</span>
+        </header>
+        <ul>
+          <li>Protein <strong>{{ summary.consumed.protein }} g</strong></li>
+          <li>Fat <strong>{{ summary.consumed.fat }} g</strong></li>
+          <li>Carbs <strong>{{ summary.consumed.carb }} g</strong></li>
+        </ul>
+      </article>
+      <article class="home-card">
+        <header>
+          <h3>Remaining</h3>
+          <span>{{ summary.balance.calories }} kcal</span>
+        </header>
+        <ul>
+          <li>Protein <strong>{{ summary.balance.protein }} g</strong></li>
+          <li>Fat <strong>{{ summary.balance.fat }} g</strong></li>
+          <li>Carbs <strong>{{ summary.balance.carb }} g</strong></li>
+        </ul>
+      </article>
+      <article class="home-card">
+        <header>
+          <h3>Training Snapshot</h3>
+          <span>{{ summary.session_count }} session{% if summary.session_count != 1 %}s{% endif %}</span>
+        </header>
+        <ul>
+          <li>Weight <strong>{{ summary.body_weight }} kg</strong></li>
+          <li>Burned <strong>{{ summary.calories_burned }} kcal</strong></li>
+          <li>Duration <strong>{{ summary.duration_minutes }} min</strong></li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section home-grid">
+    <div class="home-calendar-card">
+      <header class="section-header">
+        <div>
+          <h2 class="section-title">Training Calendar</h2>
+          <p class="section-subtitle">Tap a highlighted day to review the logged session details.</p>
+        </div>
+      </header>
+      <div class="home-calendar-layout">
+        <div class="calendar-panel calendar-panel--embedded calendar-panel--compact">
+          <div class="calendar-header">
+            <button class="calendar-nav" data-dir="prev" type="button" aria-label="Previous month">‹</button>
+            <div class="calendar-month" id="homeCalendarMonth"></div>
+            <button class="calendar-nav" data-dir="next" type="button" aria-label="Next month">›</button>
+          </div>
+          <div class="calendar-grid home-calendar-grid" id="homeCalendarGrid">
+            <div class="calendar-weekday">Mon</div>
+            <div class="calendar-weekday">Tue</div>
+            <div class="calendar-weekday">Wed</div>
+            <div class="calendar-weekday">Thu</div>
+            <div class="calendar-weekday">Fri</div>
+            <div class="calendar-weekday">Sat</div>
+            <div class="calendar-weekday">Sun</div>
+          </div>
+        </div>
+        <div class="home-calendar-details" id="homeCalendarDetails">
+          <p class="filter-note">Select a highlighted date to inspect the session.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="home-activity-card">
+      <header class="section-header">
+        <div>
+          <h2 class="section-title">Recent Sessions</h2>
+          <p class="section-subtitle">Latest logged training blocks with energy and macro guidance.</p>
+        </div>
+        <a class="button button-secondary" href="{{ url_for('dashboard') }}">View Timeline</a>
+      </header>
+      <div class="home-session-list">
+        {% if recent_sessions %}
+          {% for session in recent_sessions %}
+            <article class="home-session-card">
+              <header>
+                <span class="session-date">{{ session.date.strftime("%b %d, %Y") }}</span>
+                <span class="session-metrics">{{ session.calories_target }} kcal • {{ session.total_reps }} reps</span>
+              </header>
+              <ul class="session-bodyparts">
+                {% set parts = session.movements | map(attribute='body_part_label') | list %}
+                {% for part in parts|unique %}
+                  <li>{{ part }}</li>
+                {% endfor %}
+              </ul>
+              <p class="session-note">{{ session.session_note or "No session notes were recorded." }}</p>
+              <footer>
+                <span>P {{ session.protein_g }} g</span>
+                <span>F {{ session.fat_g }} g</span>
+                <span>C {{ session.carb_g }} g</span>
+              </footer>
+            </article>
+          {% endfor %}
+        {% else %}
+          <p class="filter-note">No sessions logged yet. Start by adding a workout.</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="section home-bottom">
+    <div class="home-bottom-grid">
+      <article class="home-summary-card">
+        <header>
+          <h2 class="section-title">Today's Macro Overview</h2>
+          <p class="section-subtitle">Compare targets vs intake to fine-tune the rest of your day.</p>
+        </header>
+        <table class="home-summary-table">
+          <thead>
+            <tr><th></th><th>Target</th><th>Consumed</th><th>Remaining</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Calories</td><td>{{ summary.target.calories }}</td><td>{{ summary.consumed.calories }}</td><td>{{ summary.balance.calories }}</td></tr>
+            <tr><td>Protein</td><td>{{ summary.target.protein }}</td><td>{{ summary.consumed.protein }}</td><td>{{ summary.balance.protein }}</td></tr>
+            <tr><td>Fat</td><td>{{ summary.target.fat }}</td><td>{{ summary.consumed.fat }}</td><td>{{ summary.balance.fat }}</td></tr>
+            <tr><td>Carbs</td><td>{{ summary.target.carb }}</td><td>{{ summary.consumed.carb }}</td><td>{{ summary.balance.carb }}</td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="home-summary-card">
+        <header>
+          <h2 class="section-title">7-Day Energy Trend</h2>
+          <p class="section-subtitle">Targets vs intake so you can course-correct quickly.</p>
+        </header>
+        <table class="home-summary-table">
+          <thead>
+            <tr><th>Date</th><th>Target</th><th>Consumed</th><th>Balance</th></tr>
+          </thead>
+          <tbody>
+            {% for item in intake_series %}
+              <tr>
+                <td>{{ item.date.strftime("%m/%d") }}</td>
+                <td>{{ item.calories_target }}</td>
+                <td>{{ item.calories_consumed }}</td>
+                <td>{{ item.calories_balance }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </article>
+    </div>
+  </section>
+
+  <script id="homeScheduleData" type="application/json">{{ schedule_json if schedule_json else '{}' }}</script>
+{% endblock %}
+
+{% block extra_scripts %}
+  {{ super() }}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const scheduleMap = JSON.parse(document.getElementById("homeScheduleData").textContent || "{}");
+      const monthLabel = document.getElementById("homeCalendarMonth");
+      const grid = document.getElementById("homeCalendarGrid");
+      const detailPanel = document.getElementById("homeCalendarDetails");
+      const navButtons = document.querySelectorAll(".calendar-panel--embedded .calendar-nav");
+
+      const today = new Date();
+      let currentYear = today.getFullYear();
+      let currentMonth = today.getMonth();
+      let activeDate = today.toISOString().substring(0, 10);
+
+      function renderDetails(dateKey) {
+        const entries = scheduleMap[dateKey];
+        detailPanel.innerHTML = "";
+        if (!entries || !entries.length) {
+          detailPanel.innerHTML = "<p class='filter-note'>No session logged for this day.</p>";
+          return;
+        }
+
+        const header = document.createElement("div");
+        header.className = "home-detail-heading";
+        header.innerHTML = `<span>${dateKey}</span><span>${entries.length} movement(s)</span>`;
+        detailPanel.appendChild(header);
+
+        entries.forEach((entry) => {
+          const item = document.createElement("div");
+          item.className = "home-detail-item";
+          item.innerHTML = `
+            <div class="item-main">
+              <span class="item-move">${entry.name}</span>
+              <span class="item-meta">${entry.weight ? entry.weight.toFixed(1) + "kg" : "Bodyweight"} • ${entry.sets}×${entry.reps}</span>
+            </div>
+            <div class="item-part">${entry.body_part_label}</div>
+          `;
+          if (entry.session_note) {
+            const note = document.createElement("p");
+            note.className = "item-note";
+            note.textContent = entry.session_note;
+            item.appendChild(note);
+          }
+          detailPanel.appendChild(item);
+        });
+      }
+
+      function formatISO(year, month, day) {
+        return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      }
+
+      function buildCalendar(year, month) {
+        monthLabel.textContent = new Date(year, month).toLocaleString(undefined, { month: "long", year: "numeric" });
+        grid.querySelectorAll(".calendar-cell").forEach((node) => node.remove());
+
+        const firstDay = new Date(year, month, 1);
+        const startDay = (firstDay.getDay() + 6) % 7;
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        for (let pad = 0; pad < startDay; pad += 1) {
+          const spacer = document.createElement("div");
+          spacer.className = "calendar-cell calendar-cell--empty";
+          grid.appendChild(spacer);
+        }
+
+        for (let day = 1; day <= daysInMonth; day += 1) {
+          const iso = formatISO(year, month, day);
+          const cell = document.createElement("button");
+          cell.type = "button";
+          cell.className = "calendar-cell";
+          cell.dataset.date = iso;
+          cell.innerHTML = `<span class="calendar-date">${day}</span>`;
+
+          if (scheduleMap[iso]) {
+            cell.classList.add("has-session");
+            cell.innerHTML += `<span class="calendar-dot"></span>`;
+          }
+          if (iso === activeDate) {
+            cell.classList.add("is-active");
+          }
+
+          cell.addEventListener("click", () => {
+            activeDate = iso;
+            grid.querySelectorAll(".calendar-cell.is-active").forEach((node) => node.classList.remove("is-active"));
+            cell.classList.add("is-active");
+            renderDetails(iso);
+          });
+
+          grid.appendChild(cell);
+        }
+      }
+
+      navButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          if (button.dataset.dir === "prev") {
+            currentMonth -= 1;
+            if (currentMonth < 0) {
+              currentMonth = 11;
+              currentYear -= 1;
+            }
+          } else {
+            currentMonth += 1;
+            if (currentMonth > 11) {
+              currentMonth = 0;
+              currentYear += 1;
+            }
+          }
+          buildCalendar(currentYear, currentMonth);
+          renderDetails(activeDate);
+        });
+      });
+
+      if (!scheduleMap[activeDate]) {
+        const available = Object.keys(scheduleMap).sort();
+        if (available.length) {
+          activeDate = available[available.length - 1];
+        }
+      }
+
+      buildCalendar(currentYear, currentMonth);
+      if (activeDate) {
+        renderDetails(activeDate);
+      }
+    });
+  </script>
+{% endblock %}

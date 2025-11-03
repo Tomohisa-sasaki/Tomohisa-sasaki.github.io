@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+
+{% block title %}New Entry - Muscle Log{% endblock %}
+
+{% block content %}
+  {% set session_form = form if form else {} %}
+  {% set payload_seed = form_payload if form_payload is defined else '' %}
+
+  <section class="section form-section">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Log A Training Session</h2>
+        <p class="section-subtitle">
+          Build a multi-movement session: each card holds its own body part, exercise, and performance metrics.
+        </p>
+      </div>
+    </div>
+
+    {% if error %}
+      <div class="alert alert-warning">{{ error }}</div>
+    {% endif %}
+
+    <form id="sessionForm" method="post" class="form form-elevated">
+      <input type="hidden" id="session_payload" name="session_payload" value="">
+
+      <div class="input-card-grid">
+        <article class="input-card">
+          <header class="input-card-header">
+            <span class="input-card-title">Session Date</span>
+            <span class="input-card-hint">Tap a day to mark when this session occurred.</span>
+          </header>
+          <input type="hidden" id="workout_date" name="workout_date" value="{{ session_form.get('workout_date', '') }}">
+          <div class="journal-calendar">
+            <div class="calendar-panel calendar-panel--embedded calendar-panel--compact">
+              <div class="calendar-header">
+                <button class="calendar-nav" data-dir="prev" type="button" aria-label="Previous month">‹</button>
+                <div class="calendar-month" id="journalCalendarMonth"></div>
+                <button class="calendar-nav" data-dir="next" type="button" aria-label="Next month">›</button>
+              </div>
+              <div class="calendar-grid journal-calendar-grid" id="journalCalendarGrid">
+                <div class="calendar-weekday">Mon</div>
+                <div class="calendar-weekday">Tue</div>
+                <div class="calendar-weekday">Wed</div>
+                <div class="calendar-weekday">Thu</div>
+                <div class="calendar-weekday">Fri</div>
+                <div class="calendar-weekday">Sat</div>
+                <div class="calendar-weekday">Sun</div>
+              </div>
+            </div>
+            <div class="journal-date-display" id="journalSelectedDate">No date selected</div>
+          </div>
+        </article>
+
+        <article class="input-card">
+          <header class="input-card-header">
+            <span class="input-card-title">Body Weight & Session Notes</span>
+            <span class="input-card-hint">Weight powers calorie burn + macro estimates. Add any session-wide remarks below.</span>
+          </header>
+          <div class="form-row">
+            <label class="form-label" for="body_weight">Body weight (kg)</label>
+            <input type="number"
+                   id="body_weight"
+                   name="body_weight"
+                   class="input"
+                   min="1"
+                   step="0.1"
+                   value="{{ session_form.get('body_weight', '') }}"
+                   placeholder="e.g. 68.5"
+                   required>
+          </div>
+          <div class="form-row">
+            <label class="form-label visually-hidden" for="session_note">Session notes</label>
+            <textarea id="session_note"
+                      name="session_note"
+                      class="textarea"
+                      rows="4"
+                      placeholder="Example: Overall RPE 8, felt strong on pressing movements.">{{ session_form.get('session_note', '') }}</textarea>
+          </div>
+        </article>
+      </div>
+
+      <article class="input-card">
+        <header class="input-card-header">
+          <span class="input-card-title">Movements</span>
+          <span class="input-card-hint">Each movement can target a different body part with unique load, sets, and reps.</span>
+        </header>
+        <div id="movementList" class="movement-list"></div>
+        <button type="button" class="button button-secondary movement-add" id="addMovement">
+          + Add Movement
+        </button>
+      </article>
+
+      <div class="form-actions">
+        <a class="button button-secondary" href="{{ url_for('home') }}">Cancel</a>
+        <button class="button button-primary" type="submit">Save Session</button>
+      </div>
+    </form>
+  </section>
+
+  <script id="exerciseCatalog" type="application/json">{{ body_parts | tojson | safe }}</script>
+  <script id="initialPayload" type="application/json">{{ payload_seed if payload_seed else '[]' }}</script>
+{% endblock %}
+
+{% block extra_scripts %}
+  {{ super() }}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const catalog = JSON.parse(document.getElementById("exerciseCatalog").textContent);
+      let initialPayload;
+      try {
+        initialPayload = JSON.parse(document.getElementById("initialPayload").textContent || "[]");
+      } catch (err) {
+        initialPayload = [];
+      }
+
+      const form = document.getElementById("sessionForm");
+      const payloadInput = document.getElementById("session_payload");
+      const list = document.getElementById("movementList");
+      const addButton = document.getElementById("addMovement");
+      const hiddenDateInput = document.getElementById("workout_date");
+      const selectedDateDisplay = document.getElementById("journalSelectedDate");
+      const calendarGrid = document.getElementById("journalCalendarGrid");
+      const calendarMonth = document.getElementById("journalCalendarMonth");
+      const calendarNavButtons = document.querySelectorAll(".calendar-panel--embedded .calendar-nav");
+
+      const today = new Date();
+      const parseISODate = (value) => {
+        if (!value) return null;
+        const [y, m, d] = value.split("-").map(Number);
+        if (!y || !m || !d) return null;
+        return new Date(y, m - 1, d);
+      };
+      const formatISODate = (date) =>
+        `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+      const formatDisplayDate = (date) =>
+        date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+
+      let activeDateObj = parseISODate(hiddenDateInput.value) || today;
+      let currentYear = activeDateObj.getFullYear();
+      let currentMonth = activeDateObj.getMonth();
+
+      function setSelectedDate(dateObj) {
+        activeDateObj = dateObj;
+        hiddenDateInput.value = formatISODate(dateObj);
+        selectedDateDisplay.textContent = formatDisplayDate(dateObj);
+      }
+
+      function buildJournalCalendar(year, month) {
+        calendarMonth.textContent = new Date(year, month).toLocaleString(undefined, { month: "long", year: "numeric" });
+        calendarGrid.querySelectorAll(".calendar-cell").forEach((node) => node.remove());
+
+        const firstDay = new Date(year, month, 1);
+        const startDay = (firstDay.getDay() + 6) % 7;
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        for (let pad = 0; pad < startDay; pad += 1) {
+          const spacer = document.createElement("div");
+          spacer.className = "calendar-cell calendar-cell--empty";
+          calendarGrid.appendChild(spacer);
+        }
+
+        const activeISO = formatISODate(activeDateObj);
+
+        for (let day = 1; day <= daysInMonth; day += 1) {
+          const dateObj = new Date(year, month, day);
+          const isoKey = formatISODate(dateObj);
+          const cell = document.createElement("button");
+          cell.type = "button";
+          cell.className = "calendar-cell";
+          cell.dataset.date = isoKey;
+          cell.innerHTML = `<span class="calendar-date">${day}</span>`;
+
+          if (isoKey === activeISO) {
+            cell.classList.add("is-active");
+          }
+
+          cell.addEventListener("click", () => {
+            setSelectedDate(dateObj);
+            buildJournalCalendar(currentYear, currentMonth);
+          });
+
+          calendarGrid.appendChild(cell);
+        }
+      }
+
+      calendarNavButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          if (button.dataset.dir === "prev") {
+            currentMonth -= 1;
+            if (currentMonth < 0) {
+              currentMonth = 11;
+              currentYear -= 1;
+            }
+          } else {
+            currentMonth += 1;
+            if (currentMonth > 11) {
+              currentMonth = 0;
+              currentYear += 1;
+            }
+          }
+          buildJournalCalendar(currentYear, currentMonth);
+        });
+      });
+
+      setSelectedDate(activeDateObj);
+      buildJournalCalendar(currentYear, currentMonth);
+
+      function buildBodyPartSelect(selected = "") {
+        const select = document.createElement("select");
+        select.className = "input";
+        select.dataset.field = "body_part";
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "Select body part…";
+        select.appendChild(placeholder);
+        Object.entries(catalog).forEach(([key, config]) => {
+          const option = document.createElement("option");
+          option.value = key;
+          option.textContent = config.label;
+          if (key === selected) option.selected = true;
+          select.appendChild(option);
+        });
+        return select;
+      }
+
+      function buildExerciseSelect(bodyPart, selected = "") {
+        const select = document.createElement("select");
+        select.className = "input";
+        select.dataset.field = "exercise";
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = bodyPart ? "Select movement…" : "Choose body part first";
+        select.appendChild(placeholder);
+        if (bodyPart && catalog[bodyPart]) {
+          catalog[bodyPart].exercises.forEach((exercise) => {
+            const option = document.createElement("option");
+            option.value = exercise;
+            option.textContent = exercise;
+            if (exercise === selected) option.selected = true;
+            select.appendChild(option);
+          });
+        }
+        select.disabled = !bodyPart;
+        return select;
+      }
+
+      function createNumberInput(field, placeholder, value = "", step = "1") {
+        const input = document.createElement("input");
+        input.type = "number";
+        input.className = "input";
+        input.dataset.field = field;
+        input.placeholder = placeholder;
+        input.step = step;
+        if (value !== undefined && value !== null && value !== "") {
+          input.value = value;
+        }
+        if (field === "weight") {
+          input.min = "0";
+          input.step = "0.5";
+        } else {
+          input.min = "0";
+          input.step = "1";
+        }
+        return input;
+      }
+
+      function createNoteInput(value = "") {
+        const textarea = document.createElement("textarea");
+        textarea.className = "textarea movement-note";
+        textarea.rows = 2;
+        textarea.placeholder = "Movement-specific notes (optional)";
+        textarea.dataset.field = "note";
+        textarea.value = value || "";
+        return textarea;
+      }
+
+      function syncPayload() {
+        const cards = list.querySelectorAll(".movement-card");
+        const payload = [];
+        cards.forEach((card) => {
+          const bodyPart = card.querySelector("[data-field='body_part']").value.trim();
+          const exercise = card.querySelector("[data-field='exercise']").value.trim();
+          const weight = card.querySelector("[data-field='weight']").value;
+          const sets = card.querySelector("[data-field='sets']").value;
+          const reps = card.querySelector("[data-field='reps']").value;
+          const note = card.querySelector("[data-field='note']").value;
+          payload.push({
+            body_part: bodyPart,
+            exercise,
+            weight,
+            sets,
+            reps,
+            note,
+          });
+        });
+        payloadInput.value = JSON.stringify(payload);
+        return payload;
+      }
+
+      function refreshRemoveButtons() {
+        const buttons = list.querySelectorAll(".movement-remove");
+        if (buttons.length === 1) {
+          buttons[0].style.visibility = "hidden";
+        } else {
+          buttons.forEach((btn) => (btn.style.visibility = "visible"));
+        }
+      }
+
+      function handleRemoveCard(card) {
+        card.remove();
+        if (list.children.length === 0) {
+          addMovementCard();
+        }
+        refreshRemoveButtons();
+        syncPayload();
+      }
+
+      function addMovementCard(initialData = {}) {
+        const card = document.createElement("article");
+        card.className = "movement-card";
+
+        const header = document.createElement("div");
+        header.className = "movement-card-header";
+        const title = document.createElement("span");
+        title.textContent = "Movement";
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "movement-remove";
+        removeBtn.textContent = "Remove";
+        removeBtn.addEventListener("click", () => handleRemoveCard(card));
+        header.appendChild(title);
+        header.appendChild(removeBtn);
+
+        const grid = document.createElement("div");
+        grid.className = "movement-grid";
+
+        const bodyPartWrapper = document.createElement("label");
+        bodyPartWrapper.className = "form-label-group";
+        bodyPartWrapper.innerHTML = "<span class='form-label'>Body part</span>";
+        const bodyPartSelect = buildBodyPartSelect(initialData.body_part || "");
+        bodyPartWrapper.appendChild(bodyPartSelect);
+
+        const exerciseWrapper = document.createElement("label");
+        exerciseWrapper.className = "form-label-group";
+        exerciseWrapper.innerHTML = "<span class='form-label'>Movement</span>";
+        let exerciseSelect = buildExerciseSelect(initialData.body_part || "", initialData.exercise || "");
+        exerciseWrapper.appendChild(exerciseSelect);
+
+        bodyPartSelect.addEventListener("change", () => {
+          const replacement = buildExerciseSelect(bodyPartSelect.value, "");
+          exerciseWrapper.replaceChild(replacement, exerciseSelect);
+          exerciseSelect = replacement;
+          exerciseSelect.addEventListener("change", syncPayload);
+          syncPayload();
+        });
+
+        exerciseSelect.addEventListener("change", syncPayload);
+
+        const weightWrapper = document.createElement("label");
+        weightWrapper.className = "form-label-group";
+        weightWrapper.innerHTML = "<span class='form-label'>Load (kg)</span>";
+        const weightInput = createNumberInput("weight", "e.g. 60", initialData.weight);
+        weightWrapper.appendChild(weightInput);
+
+        const setsWrapper = document.createElement("label");
+        setsWrapper.className = "form-label-group";
+        setsWrapper.innerHTML = "<span class='form-label'>Sets</span>";
+        const setsInput = createNumberInput("sets", "e.g. 4", initialData.sets || "");
+        setsWrapper.appendChild(setsInput);
+
+        const repsWrapper = document.createElement("label");
+        repsWrapper.className = "form-label-group";
+        repsWrapper.innerHTML = "<span class='form-label'>Reps</span>";
+        const repsInput = createNumberInput("reps", "e.g. 8", initialData.reps || "");
+        repsWrapper.appendChild(repsInput);
+
+        [bodyPartSelect, exerciseSelect, weightInput, setsInput, repsInput].forEach((input) => {
+          input.addEventListener("input", syncPayload);
+        });
+
+        const noteWrapper = document.createElement("label");
+        noteWrapper.className = "form-label-group movement-note-wrapper";
+        noteWrapper.innerHTML = "<span class='form-label'>Notes</span>";
+        const noteInput = createNoteInput(initialData.note || "");
+        noteInput.addEventListener("input", syncPayload);
+        noteWrapper.appendChild(noteInput);
+
+        grid.appendChild(bodyPartWrapper);
+        grid.appendChild(exerciseWrapper);
+        grid.appendChild(weightWrapper);
+        grid.appendChild(setsWrapper);
+        grid.appendChild(repsWrapper);
+        grid.appendChild(noteWrapper);
+
+        card.appendChild(header);
+        card.appendChild(grid);
+        list.appendChild(card);
+
+        refreshRemoveButtons();
+        syncPayload();
+      }
+
+      addButton.addEventListener("click", () => {
+        addMovementCard();
+      });
+
+      form.addEventListener("submit", (event) => {
+        const payload = syncPayload();
+        const hasValidMovement = payload.some((item) => item.body_part && item.exercise);
+        if (!hasValidMovement) {
+          event.preventDefault();
+          alert("Please add at least one movement with a body part and exercise before saving.");
+        }
+      });
+
+      if (Array.isArray(initialPayload) && initialPayload.length > 0) {
+        initialPayload.forEach((entry) => addMovementCard(entry));
+      } else {
+        addMovementCard();
+      }
+    });
+  </script>
+{% endblock %}

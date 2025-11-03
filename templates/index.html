@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Muscle Log{% endblock %}
+
+{% block content %}
+  <section class="section section-dashboard">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Recent Activity</h2>
+        <p class="section-subtitle">
+          Review your sessions grouped by day and focus area, then shape the next workout with intent.
+        </p>
+      </div>
+      <div class="section-actions">
+        <a class="button button-secondary" href="{{ url_for('analytics') }}">Open Analytics</a>
+        <a class="button button-primary" href="{{ url_for('new_workouts') }}">Add New Entry</a>
+      </div>
+    </div>
+
+    {% if has_workouts %}
+      <div class="timeline">
+        {% for day, body_groups in grouped_workouts|dictsort(reverse=True) %}
+          <article class="timeline-day-card">
+            <header class="timeline-day-header">
+              <div class="timeline-date-label">{{ day }}</div>
+              {% set aggregate = namespace(exercises=0) %}
+              {% for entries in body_groups.values() %}
+                {% set aggregate.exercises = aggregate.exercises + (entries|length) %}
+              {% endfor %}
+              <div class="timeline-meta">
+                <span class="timeline-meta-item">
+                  {{ body_groups|length }} focus areas
+                </span>
+                <span class="timeline-meta-dot">•</span>
+                <span class="timeline-meta-item">
+                  {{ aggregate.exercises }} total exercises
+                </span>
+              </div>
+            </header>
+
+            <div class="timeline-body">
+              {% for body_label, entries in body_groups|dictsort %}
+                {% set first = entries[0] if entries else None %}
+                {% set body_key = first.body_part if first else '' %}
+                {% set accent = body_parts.get(body_key, {}).get('color', '#3f6f55') %}
+                <section class="focus-block" style="--focus-accent: {{ accent }};">
+                  <header class="focus-header">
+                    <span class="focus-chip">{{ body_label }}</span>
+                  <div class="focus-volume">
+                      <span>{{ entries|sum(attribute='sets') }} sets</span>
+                      <span class="focus-volume-dot">•</span>
+                      <span>{{ entries|sum(attribute='total_reps') }} total reps</span>
+                    </div>
+                  </header>
+
+                  <div class="exercise-grid">
+                    {% for workout in entries %}
+                      <article class="exercise-card">
+                        <div class="exercise-card-main">
+                          <div class="exercise-heading">
+                            <h3 class="exercise-name">{{ workout.name }}</h3>
+                            <span class="exercise-weight">
+                              {% if workout.weight %}
+                                {{ workout.weight|round(1) }} kg
+                              {% else %}
+                                Bodyweight
+                              {% endif %}
+                            </span>
+                          </div>
+                          <div class="exercise-stats">
+                            <span class="stat-badge">{{ workout.sets }} sets</span>
+                            <span class="stat-separator">×</span>
+                            <span class="stat-badge">{{ workout.reps }} reps</span>
+                            <span class="stat-separator">•</span>
+                            <span class="stat-metric">{{ workout.total_reps }} total</span>
+                          </div>
+                          <p class="exercise-notes">{{ workout.notes or "No notes recorded." }}</p>
+                          {% if loop.first %}
+                          <div class="exercise-macros">
+                            <span class="exercise-metric">Burned {{ workout.calories_burned }} kcal in {{ workout.session_duration_minutes }} min</span>
+                            <span class="exercise-metric">Targets: P {{ workout.protein_g }} g / F {{ workout.fat_g }} g / C {{ workout.carb_g }} g ({{ workout.calories_target }} kcal)</span>
+                          </div>
+                          {% endif %}
+                        </div>
+                      </article>
+                    {% endfor %}
+                  </div>
+                </section>
+              {% endfor %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-illustration" aria-hidden="true">💪</div>
+        <h3>No sessions yet</h3>
+        <p>Log your first workout to build a personalized performance history.</p>
+        <a class="button button-accent" href="{{ url_for('new_workouts') }}">Start Logging</a>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

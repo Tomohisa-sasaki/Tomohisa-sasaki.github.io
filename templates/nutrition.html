@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Nutrition Log - Muscle Log{% endblock %}
+
+{% block content %}
+  <section class="section nutrition-form-section">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Log Nutrition & Weight</h2>
+        <p class="section-subtitle">Track daily intake to keep macros aligned with training demand.</p>
+      </div>
+    </div>
+    <form method="post" class="form-nutrition">
+      <div class="form-grid">
+        <label class="form-label-group">
+          <span class="form-label">Date</span>
+          <input type="date" name="log_date" class="input" value="{{ date.today().isoformat() }}">
+        </label>
+        <label class="form-label-group">
+          <span class="form-label">Body weight (kg)</span>
+          <input type="number" name="log_weight" class="input" step="0.1" min="1" placeholder="{{ latest_weight }}">
+        </label>
+        <label class="form-label-group">
+          <span class="form-label">Calories</span>
+          <input type="number" name="log_calories" class="input" step="1" min="0" placeholder="2100">
+        </label>
+        <label class="form-label-group">
+          <span class="form-label">Protein (g)</span>
+          <input type="number" name="log_protein" class="input" step="0.1" min="0" placeholder="150">
+        </label>
+        <label class="form-label-group">
+          <span class="form-label">Fat (g)</span>
+          <input type="number" name="log_fat" class="input" step="0.1" min="0" placeholder="60">
+        </label>
+        <label class="form-label-group">
+          <span class="form-label">Carbs (g)</span>
+          <input type="number" name="log_carb" class="input" step="0.1" min="0" placeholder="220">
+        </label>
+      </div>
+      <label class="form-label-group">
+        <span class="form-label">Notes</span>
+        <textarea name="log_notes" class="textarea" rows="3" placeholder="Breakfast + smoothie..."></textarea>
+      </label>
+      <div class="form-actions">
+        <button class="button button-primary" type="submit">Add Entry</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="section nutrition-summary">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Daily Totals</h2>
+        <p class="section-subtitle">Summaries aggregate multiple entries logged on the same day.</p>
+      </div>
+    </div>
+    <table class="home-summary-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Weight</th>
+          <th>Calories</th>
+          <th>Protein</th>
+          <th>Fat</th>
+          <th>Carbs</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for date_key, totals in daily_history %}
+          <tr>
+            <td>{{ date_key }}</td>
+            <td>{% if totals.weight %}{{ totals.weight }} kg{% else %}—{% endif %}</td>
+            <td>{{ totals.calories }}</td>
+            <td>{{ totals.protein }}</td>
+            <td>{{ totals.fat }}</td>
+            <td>{{ totals.carb }}</td>
+          </tr>
+        {% else %}
+          <tr><td colspan="6" class="filter-note">No nutrition entries logged yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section nutrition-log">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Entry History</h2>
+        <p class="section-subtitle">Raw log detail for auditing and adjustments.</p>
+      </div>
+    </div>
+    <div class="nutrition-log-list">
+      {% if logs %}
+        {% for entry in logs %}
+          <article class="nutrition-log-card">
+            <header>
+              <span class="log-date">{{ entry.date.strftime("%b %d, %Y") }}</span>
+              {% if entry.weight %}
+                <span class="log-weight">{{ entry.weight }} kg</span>
+              {% endif %}
+            </header>
+            <ul class="log-macros">
+              <li>Calories <strong>{{ entry.calories }}</strong></li>
+              <li>Protein <strong>{{ entry.protein }} g</strong></li>
+              <li>Fat <strong>{{ entry.fat }} g</strong></li>
+              <li>Carbs <strong>{{ entry.carb }} g</strong></li>
+            </ul>
+            {% if entry.notes %}
+              <p class="log-notes">{{ entry.notes }}</p>
+            {% endif %}
+          </article>
+        {% endfor %}
+      {% else %}
+        <p class="filter-note">No entries recorded yet.</p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

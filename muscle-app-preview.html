@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Muscle Log Preview</title>
+  <link rel="stylesheet" href="flask_muscle_app/static/style.css">
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      margin: 0;
+      background: transparent;
+      font-family: var(--font-sans, "Poppins", "Inter", sans-serif);
+      color: var(--color-text, #e6f2ec);
+    }
+
+    .preview-shell {
+      padding: 24px;
+      background: rgba(15, 21, 19, 0.88);
+      border-radius: 20px;
+      border: 1px solid rgba(62, 207, 142, 0.26);
+      box-shadow: var(--shadow-lg, 0 24px 48px rgba(0, 0, 0, 0.4));
+      overflow: hidden;
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .preview-header h1 {
+      margin: 0;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .preview-header p {
+      margin: 4px 0 0;
+      color: var(--color-text-muted, #90a29b);
+      font-size: 0.95rem;
+    }
+
+    .preview-tabs {
+      display: grid;
+      gap: 18px;
+    }
+
+    .preview-tab-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .preview-tab {
+      appearance: none;
+      position: absolute;
+      opacity: 0;
+    }
+
+    .preview-tab-label {
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(62, 207, 142, 0.28);
+      color: var(--color-text-muted, #90a29b);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .preview-tab:checked + .preview-tab-label {
+      background: rgba(62, 207, 142, 0.2);
+      color: var(--color-text, #e6f2ec);
+      box-shadow: 0 18px 32px rgba(62, 207, 142, 0.22);
+      transform: translateY(-1px);
+    }
+
+    .preview-panels {
+      position: relative;
+    }
+
+    .preview-panel {
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .preview-tab:nth-of-type(1):checked ~ .preview-panels .preview-panel--dashboard,
+    .preview-tab:nth-of-type(2):checked ~ .preview-panels .preview-panel--schedule,
+    .preview-tab:nth-of-type(3):checked ~ .preview-panels .preview-panel--analytics {
+      display: grid;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .preview-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .preview-card {
+      background: var(--color-card, rgba(29, 38, 35, 0.92));
+      border-radius: var(--radius-md, 14px);
+      border: 1px solid var(--color-border, rgba(110, 136, 120, 0.25));
+      padding: 16px;
+      box-shadow: var(--shadow-sm, 0 16px 32px rgba(0, 0, 0, 0.26));
+      display: grid;
+      gap: 8px;
+    }
+
+    .preview-card h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--color-text, #e6f2ec);
+    }
+
+    .preview-card span {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--color-primary, #3ecf8e);
+    }
+
+    .preview-card ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--color-text-muted, #90a29b);
+      font-size: 0.85rem;
+      display: grid;
+      gap: 4px;
+    }
+
+    .preview-calendar {
+      display: grid;
+      gap: 16px;
+    }
+
+    .preview-calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .preview-day {
+      padding: 12px 10px;
+      text-align: center;
+      border-radius: 12px;
+      border: 1px solid rgba(62, 207, 142, 0.24);
+      background: rgba(14, 22, 19, 0.7);
+      color: var(--color-text-muted, #90a29b);
+      font-size: 0.78rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-day[data-active="true"] {
+      color: var(--color-text, #e6f2ec);
+      background: linear-gradient(135deg, rgba(62, 207, 142, 0.35), rgba(17, 25, 22, 0.92));
+      border-color: rgba(62, 207, 142, 0.45);
+      box-shadow: 0 18px 28px rgba(62, 207, 142, 0.22);
+    }
+
+    .preview-day::after {
+      content: attr(data-focus);
+      display: block;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 8px;
+      color: inherit;
+    }
+
+    .preview-schedule {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .preview-schedule-card {
+      background: var(--color-card-elevated, rgba(33, 45, 41, 0.95));
+      border-radius: var(--radius-md, 14px);
+      border: 1px solid var(--color-border, rgba(110, 136, 120, 0.25));
+      padding: 18px;
+      box-shadow: var(--shadow-md, 0 18px 38px rgba(0, 0, 0, 0.32));
+      display: grid;
+      gap: 10px;
+    }
+
+    .preview-schedule-card header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--color-text-muted, #90a29b);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .preview-schedule-card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--color-text, #e6f2ec);
+    }
+
+    .preview-schedule-card ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 6px;
+      color: var(--color-text-muted, #90a29b);
+      font-size: 0.9rem;
+    }
+
+    .preview-chart {
+      border-radius: var(--radius-md, 14px);
+      border: 1px solid rgba(62, 207, 142, 0.26);
+      background: rgba(16, 23, 21, 0.78);
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .preview-chart h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .preview-chart-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .preview-chart-row {
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--color-text-muted, #90a29b);
+    }
+
+    .preview-chart-bar {
+      --progress: 0.5;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(62, 207, 142, 0.12);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .preview-chart-bar::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: calc(var(--progress) * 100%);
+      background: linear-gradient(90deg, rgba(62, 207, 142, 0.5), rgba(95, 227, 176, 0.75));
+      border-radius: inherit;
+    }
+
+    .preview-chart label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-subtle, #6d7e77);
+    }
+
+    .preview-legend {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+      color: var(--color-text-muted, #90a29b);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .preview-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preview-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--color-primary, #3ecf8e);
+      display: inline-block;
+    }
+
+    .preview-dot--alt {
+      background: #5fe3b0;
+    }
+
+    @media (max-width: 540px) {
+      .preview-shell {
+        padding: 20px;
+      }
+
+      .preview-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="preview-shell" data-theme="forest">
+    <header class="preview-header">
+      <div>
+        <h1>Muscle Log Companion</h1>
+        <p>Track training, nutrition, and recovery with adaptive AI routines.</p>
+      </div>
+      <div class="preview-legend">
+        <span><span class="preview-dot"></span> Target</span>
+        <span><span class="preview-dot preview-dot--alt"></span> Actual</span>
+      </div>
+    </header>
+
+    <div class="preview-tabs">
+      <div class="preview-tab-bar">
+        <input class="preview-tab" type="radio" name="preview-tabs" id="preview-tab-dashboard" checked>
+        <label class="preview-tab-label" for="preview-tab-dashboard">Dashboard</label>
+
+        <input class="preview-tab" type="radio" name="preview-tabs" id="preview-tab-schedule">
+        <label class="preview-tab-label" for="preview-tab-schedule">Schedule</label>
+
+        <input class="preview-tab" type="radio" name="preview-tabs" id="preview-tab-analytics">
+        <label class="preview-tab-label" for="preview-tab-analytics">Analytics</label>
+      </div>
+
+      <div class="preview-panels">
+        <div class="preview-panel preview-panel--dashboard">
+          <div class="preview-cards">
+            <article class="preview-card">
+              <h3>Today's Targets</h3>
+              <span>2,300 kcal</span>
+              <ul>
+                <li>Protein <strong>160 g</strong></li>
+                <li>Fat <strong>70 g</strong></li>
+                <li>Carbs <strong>250 g</strong></li>
+              </ul>
+            </article>
+            <article class="preview-card">
+              <h3>Consumed</h3>
+              <span>1,780 kcal</span>
+              <ul>
+                <li>Protein <strong>124 g</strong></li>
+                <li>Fat <strong>58 g</strong></li>
+                <li>Carbs <strong>190 g</strong></li>
+              </ul>
+            </article>
+            <article class="preview-card">
+              <h3>Remaining</h3>
+              <span>520 kcal</span>
+              <ul>
+                <li>Protein <strong>36 g</strong></li>
+                <li>Fat <strong>12 g</strong></li>
+                <li>Carbs <strong>60 g</strong></li>
+              </ul>
+            </article>
+            <article class="preview-card">
+              <h3>Training Snapshot</h3>
+              <span>Session 42</span>
+              <ul>
+                <li>Burned <strong>460 kcal</strong></li>
+                <li>Duration <strong>78 min</strong></li>
+                <li>Focus <strong>Push + Core</strong></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="preview-panel preview-panel--schedule">
+          <div class="preview-calendar">
+            <header class="preview-header" style="margin-bottom: 0;">
+              <div>
+                <h1 style="font-size: 1.2rem;">Training Calendar</h1>
+                <p>Hover a highlighted day to see the programmed blocks.</p>
+              </div>
+            </header>
+            <div class="preview-calendar-grid">
+              <div class="preview-day" data-focus="">Mon</div>
+              <div class="preview-day" data-focus="">Tue</div>
+              <div class="preview-day" data-focus="Strength" data-active="true">Wed</div>
+              <div class="preview-day" data-focus="">Thu</div>
+              <div class="preview-day" data-focus="Mobility">Fri</div>
+              <div class="preview-day" data-focus="">Sat</div>
+              <div class="preview-day" data-focus="Recovery">Sun</div>
+            </div>
+          </div>
+
+          <div class="preview-schedule">
+            <article class="preview-schedule-card">
+              <header>
+                <span>Block A</span>
+                <span>45 min</span>
+              </header>
+              <h3>Velocity Bench + Auxiliary Push</h3>
+              <ul>
+                <li>3 × 5 @ 75% 1RM with bar-speed capture</li>
+                <li>Incline DB Press with tempo control</li>
+                <li>AI-selected delt finisher</li>
+              </ul>
+            </article>
+            <article class="preview-schedule-card">
+              <header>
+                <span>Block B</span>
+                <span>25 min</span>
+              </header>
+              <h3>Core Stabilization</h3>
+              <ul>
+                <li>Pallof press ladder with HRV pacing</li>
+                <li>Farmer hold → Copenhagen plank superset</li>
+                <li>Guided breathing cooldown</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="preview-panel preview-panel--analytics">
+          <div class="preview-chart">
+            <h3>7-Day Energy Trend</h3>
+            <div class="preview-chart-grid">
+              <div class="preview-chart-row">
+                <span>Mon</span>
+                <div class="preview-chart-bar" style="--progress: 0.72;"></div>
+                <span>−320 kcal</span>
+              </div>
+              <div class="preview-chart-row">
+                <span>Tue</span>
+                <div class="preview-chart-bar" style="--progress: 0.95;"></div>
+                <span>+80 kcal</span>
+              </div>
+              <div class="preview-chart-row">
+                <span>Wed</span>
+                <div class="preview-chart-bar" style="--progress: 0.88;"></div>
+                <span>−110 kcal</span>
+              </div>
+              <div class="preview-chart-row">
+                <span>Thu</span>
+                <div class="preview-chart-bar" style="--progress: 1.05;"></div>
+                <span>+140 kcal</span>
+              </div>
+              <div class="preview-chart-row">
+                <span>Fri</span>
+                <div class="preview-chart-bar" style="--progress: 0.63;"></div>
+                <span>−420 kcal</span>
+              </div>
+              <div class="preview-chart-row">
+                <span>Sat</span>
+                <div class="preview-chart-bar" style="--progress: 1.12;"></div>
+                <span>+220 kcal</span>
+              </div>
+              <div class="preview-chart-row">
+                <span>Sun</span>
+                <div class="preview-chart-bar" style="--progress: 0.82;"></div>
+                <span>−190 kcal</span>
+              </div>
+            </div>
+            <div class="preview-legend">
+              <span><span class="preview-dot"></span> Target Intake</span>
+              <span><span class="preview-dot preview-dot--alt"></span> Actual Intake</span>
+              <span>Variance = Recovery Recommendation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

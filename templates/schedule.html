@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule - Muscle Log{% endblock %}
+
+{% block content %}
+  <section class="section">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Training Schedule</h2>
+        <p class="section-subtitle">
+          Visualise your training history on a dark, green-accent calendar. Tap a marked day to inspect the logged movements.
+        </p>
+      </div>
+      <a class="button button-primary" href="{{ url_for('new_workouts') }}">Log New Session</a>
+    </div>
+
+    <div class="schedule-layout">
+      <div class="calendar-panel">
+        <div class="calendar-header">
+          <button class="calendar-nav" data-dir="prev" aria-label="Previous month">‹</button>
+          <div class="calendar-month" id="calendarMonth"></div>
+          <button class="calendar-nav" data-dir="next" aria-label="Next month">›</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid">
+          <div class="calendar-weekday">Mon</div>
+          <div class="calendar-weekday">Tue</div>
+          <div class="calendar-weekday">Wed</div>
+          <div class="calendar-weekday">Thu</div>
+          <div class="calendar-weekday">Fri</div>
+          <div class="calendar-weekday">Sat</div>
+          <div class="calendar-weekday">Sun</div>
+        </div>
+      </div>
+
+      <div class="schedule-details">
+        <h3>Day Review</h3>
+        <div id="scheduleDetails" class="schedule-details-body">
+          <p class="filter-note">Select a highlighted date to review the session.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script id="scheduleData" type="application/json">{{ schedule_json if schedule_json else '{}' }}</script>
+{% endblock %}
+
+{% block extra_scripts %}
+  {{ super() }}
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const scheduleMap = JSON.parse(document.getElementById("scheduleData").textContent || "{}");
+      const calendarGrid = document.getElementById("calendarGrid");
+      const calendarMonth = document.getElementById("calendarMonth");
+      const detailsPanel = document.getElementById("scheduleDetails");
+      const navButtons = document.querySelectorAll(".calendar-nav");
+
+      let activeDate = null;
+      const today = new Date();
+      let currentYear = today.getFullYear();
+      let currentMonth = today.getMonth();
+
+      function formatISO(year, month, day) {
+        return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      }
+
+      function renderDetails(dateKey) {
+        const entries = scheduleMap[dateKey];
+        detailsPanel.innerHTML = "";
+
+        if (!entries || !entries.length) {
+          detailsPanel.innerHTML = "<p class='filter-note'>No session logged for this day.</p>";
+          return;
+        }
+
+        const heading = document.createElement("div");
+        heading.className = "schedule-details-heading";
+        heading.innerHTML = `<span class="schedule-details-date">${dateKey}</span><span>${entries.length} movement(s)</span>`;
+        detailsPanel.appendChild(heading);
+
+        const summarySource = entries[0];
+        if (summarySource && typeof summarySource.calories_burned !== "undefined") {
+          const summary = document.createElement("div");
+          summary.className = "schedule-session-metrics";
+          summary.innerHTML = `
+            <span class="schedule-metric">Burned ${summarySource.calories_burned} kcal</span>
+            <span class="schedule-metric">Targets: P ${summarySource.protein_g}g / F ${summarySource.fat_g}g / C ${summarySource.carb_g}g</span>
+          `;
+          detailsPanel.appendChild(summary);
+        }
+
+        const grouped = entries.reduce((acc, entry) => {
+          const part = entry.body_part_label;
+          acc[part] = acc[part] || [];
+          acc[part].push(entry);
+          return acc;
+        }, {});
+
+        Object.entries(grouped).forEach(([label, items]) => {
+          const card = document.createElement("article");
+          card.className = "schedule-session-card";
+          const header = document.createElement("div");
+          header.className = "schedule-session-header";
+          header.innerHTML = `<span class="schedule-session-label">${label}</span><span class="schedule-session-count">${items.length} lifts</span>`;
+          card.appendChild(header);
+
+          const list = document.createElement("ul");
+          list.className = "schedule-session-list";
+          items.forEach((item) => {
+            const li = document.createElement("li");
+            const noteSegment = item.notes ? `<span class="schedule-session-note">${item.notes}</span>` : "";
+            const weightSegment = item.weight ? `${item.weight.toFixed(1)}kg` : "Bodyweight";
+            li.innerHTML = `
+              <div class="schedule-session-row">
+                <span class="schedule-session-move">${item.name}</span>
+                <span class="schedule-session-meta">${weightSegment} · ${item.sets} sets × ${item.reps} reps</span>
+              </div>
+              ${noteSegment}
+            `;
+            list.appendChild(li);
+          });
+          card.appendChild(list);
+
+          const sessionNotes = items.find((item) => item.session_note);
+          if (sessionNotes) {
+            const sessionNote = document.createElement("p");
+            sessionNote.className = "schedule-session-summary";
+            sessionNote.textContent = sessionNotes.session_note;
+            card.appendChild(sessionNote);
+          }
+
+          detailsPanel.appendChild(card);
+        });
+      }
+
+      function buildCalendar(year, month) {
+        calendarMonth.textContent = new Date(year, month).toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        });
+
+        const firstDay = new Date(year, month, 1);
+        const startDay = (firstDay.getDay() + 6) % 7; // convert Sunday=0 to Sunday=6 ordering Mon-Sun
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        calendarGrid.querySelectorAll(".calendar-cell").forEach((node) => node.remove());
+
+        for (let pad = 0; pad < startDay; pad += 1) {
+          const spacer = document.createElement("div");
+          spacer.className = "calendar-cell calendar-cell--empty";
+          calendarGrid.appendChild(spacer);
+        }
+
+        let activeCellExists = false;
+
+        for (let day = 1; day <= daysInMonth; day += 1) {
+          const dateKey = formatISO(year, month, day);
+          const cell = document.createElement("button");
+          cell.type = "button";
+          cell.className = "calendar-cell";
+          cell.setAttribute("data-date", dateKey);
+          cell.innerHTML = `<span class="calendar-date">${day}</span>`;
+
+          if (scheduleMap[dateKey]) {
+            cell.classList.add("has-session");
+            cell.innerHTML += `<span class="calendar-dot"></span>`;
+          }
+
+          if (dateKey === activeDate) {
+            cell.classList.add("is-active");
+            activeCellExists = true;
+          }
+
+          cell.addEventListener("click", () => {
+            activeDate = dateKey;
+            calendarGrid.querySelectorAll(".calendar-cell.is-active").forEach((node) => node.classList.remove("is-active"));
+            cell.classList.add("is-active");
+            renderDetails(dateKey);
+          });
+
+          calendarGrid.appendChild(cell);
+        }
+
+        if (!activeCellExists) {
+          const firstAvailable = calendarGrid.querySelector(".calendar-cell.has-session");
+          if (firstAvailable) {
+            activeDate = firstAvailable.dataset.date;
+            firstAvailable.classList.add("is-active");
+          } else {
+            activeDate = null;
+          }
+        }
+      }
+
+      navButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const dir = button.dataset.dir;
+          if (dir === "prev") {
+            currentMonth -= 1;
+            if (currentMonth < 0) {
+              currentMonth = 11;
+              currentYear -= 1;
+            }
+          } else {
+            currentMonth += 1;
+            if (currentMonth > 11) {
+              currentMonth = 0;
+              currentYear += 1;
+            }
+          }
+          buildCalendar(currentYear, currentMonth);
+          const fallback = activeDate || formatISO(currentYear, currentMonth, 1);
+          renderDetails(fallback);
+        });
+      });
+
+      activeDate = formatISO(today.getFullYear(), today.getMonth(), today.getDate());
+      buildCalendar(currentYear, currentMonth);
+
+      if (!scheduleMap[activeDate]) {
+        const availableDates = Object.keys(scheduleMap).sort();
+        if (availableDates.length > 0) {
+          activeDate = availableDates[availableDates.length - 1];
+          const cell = calendarGrid.querySelector(`[data-date='${activeDate}']`);
+          if (cell) {
+            cell.classList.add("is-active");
+          }
+        }
+      } else {
+        const cell = calendarGrid.querySelector(`[data-date='${activeDate}']`);
+        if (cell) cell.classList.add("is-active");
+      }
+
+      if (activeDate) {
+        renderDetails(activeDate);
+      } else {
+        detailsPanel.innerHTML = "<p class='filter-note'>No sessions logged yet. Start by adding a workout.</p>";
+      }
+    });
+  </script>
+{% endblock %}

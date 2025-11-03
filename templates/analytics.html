@@ -1,0 +1,312 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - Muscle Log{% endblock %}
+
+{% block content %}
+  <section class="section">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">Progress Analytics</h2>
+        <p class="section-subtitle">
+          Reference the ngx-admin approach: compel focused filters, then render polished series for the metrics that matter.
+        </p>
+      </div>
+        <a class="button button-secondary" href="{{ url_for('new_workouts') }}">Log New Entry</a>
+    </div>
+
+    <div class="analytics-grid">
+      <div class="analytics-panel">
+        <h3 class="section-subtitle" style="margin:0;font-size:0.96rem;color:var(--color-text);font-weight:600;">
+          Filters
+        </h3>
+        <p class="filter-note">
+          Pick a body part and at least one movement. When a load is chosen, the chart pivots from load tracking to rep trends.
+        </p>
+        <div class="analytics-filters">
+          <label class="form-label">
+            Body part
+            <select id="filterBodyPart" class="input" required>
+              <option value="">Select body part…</option>
+              {% for key, data in body_parts.items() %}
+                <option value="{{ key }}">{{ data.label }}</option>
+              {% endfor %}
+            </select>
+          </label>
+
+          <div>
+            <div class="form-label" style="margin-bottom:0.45rem;">Movements (multi-select)</div>
+            <div id="exerciseChecklist" class="filter-multi" data-empty="Select a body part first.">
+              <span class="filter-note">Select a body part first.</span>
+            </div>
+          </div>
+
+          <label class="form-label">
+            Load (kg)
+            <select id="filterWeight" class="input" disabled>
+              <option value="">Any load</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="analytics-canvas">
+        <canvas id="progressChart"></canvas>
+        <div class="analytics-empty" id="chartEmpty">
+          Select a body part and movement(s) to visualise your training data.
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block extra_scripts %}
+  {{ super() }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const workouts = {{ workouts_json | safe }};
+      const bodyPartSelect = document.getElementById("filterBodyPart");
+      const exerciseChecklist = document.getElementById("exerciseChecklist");
+      const weightSelect = document.getElementById("filterWeight");
+      const emptyMessage = document.getElementById("chartEmpty");
+      const ctx = document.getElementById("progressChart").getContext("2d");
+      const catalog = {{ body_parts | tojson | safe }};
+
+      let chart;
+
+      function clearWeight() {
+        weightSelect.value = "";
+        weightSelect.disabled = true;
+        weightSelect.innerHTML = "<option value=''>Any load</option>";
+      }
+
+      function selectedExercises() {
+        return Array.from(exerciseChecklist.querySelectorAll("input[name='exercise']:checked")).map((node) => node.value);
+      }
+
+      function renderExercises(bodyPartKey) {
+        exerciseChecklist.innerHTML = "";
+        if (!bodyPartKey) {
+          exerciseChecklist.innerHTML = `<span class="filter-note">${exerciseChecklist.dataset.empty}</span>`;
+          clearWeight();
+          return;
+        }
+
+        const exercises = catalog[bodyPartKey]?.exercises || [];
+        if (!exercises.length) {
+          exerciseChecklist.innerHTML = "<span class='filter-note'>No movements registered yet.</span>";
+          clearWeight();
+          return;
+        }
+
+        exercises.forEach((exercise, index) => {
+          const id = `exercise_${bodyPartKey}_${index}`;
+          const label = document.createElement("label");
+          label.htmlFor = id;
+          label.innerHTML = `
+            <input type="checkbox" id="${id}" name="exercise" value="${exercise}">
+            <span>${exercise}</span>
+          `;
+          exerciseChecklist.appendChild(label);
+        });
+
+        const checkboxes = exerciseChecklist.querySelectorAll("input[name='exercise']");
+        checkboxes.forEach((input) => (input.checked = true));
+
+        exerciseChecklist.querySelectorAll("input[name='exercise']").forEach((input) => {
+          input.addEventListener("change", () => {
+            updateWeightOptions();
+            renderChart();
+          });
+        });
+
+        clearWeight();
+        updateWeightOptions();
+      }
+
+      function updateWeightOptions() {
+        const bodyPartKey = bodyPartSelect.value;
+        const exercises = selectedExercises();
+        if (!bodyPartKey || !exercises.length) {
+          clearWeight();
+          return;
+        }
+
+        const matches = workouts.filter((entry) => entry.body_part === bodyPartKey && exercises.includes(entry.name));
+        const weights = Array.from(new Set(matches.map((entry) => entry.weight).filter((w) => typeof w === "number" && w > 0)));
+
+        clearWeight();
+        if (!weights.length) {
+          return;
+        }
+
+        weightSelect.disabled = false;
+        weights.sort((a, b) => a - b).forEach((value) => {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = `${value} kg`;
+          weightSelect.appendChild(option);
+        });
+      }
+
+      function filterWorkouts() {
+        const bodyPartKey = bodyPartSelect.value;
+        const exercises = selectedExercises();
+        const targetWeight = weightSelect.value ? Number(weightSelect.value) : null;
+
+        if (!bodyPartKey || !exercises.length) {
+          return [];
+        }
+
+        return workouts.filter((entry) => {
+          if (entry.body_part !== bodyPartKey) return false;
+          if (!exercises.includes(entry.name)) return false;
+          if (targetWeight !== null && entry.weight !== targetWeight) return false;
+          return true;
+        });
+      }
+
+      function aggregate(entries, weightValue) {
+        const labelsSet = new Set();
+        const grouped = new Map();
+
+        entries.forEach((entry) => {
+          labelsSet.add(entry.date);
+          const bucket = grouped.get(entry.name) || [];
+          bucket.push(entry);
+          grouped.set(entry.name, bucket);
+        });
+
+        const labels = Array.from(labelsSet).sort((a, b) => new Date(a) - new Date(b));
+        const palette = ["#5fe3b0", "#3ecf8e", "#2aa66c", "#4ee6a1", "#7bfacd", "#49b983", "#66f5c0"];
+        let colorIndex = 0;
+
+        const datasets = Array.from(grouped.entries()).map(([exerciseName, items]) => {
+          const perDate = new Map();
+          items.forEach((item) => {
+            const memo = perDate.get(item.date) || { maxWeight: 0, totalReps: 0 };
+            memo.maxWeight = Math.max(memo.maxWeight, item.weight || 0);
+            memo.totalReps += (item.sets || 0) * (item.reps || 0);
+            perDate.set(item.date, memo);
+          });
+
+          const dataSeries = labels.map((label) => {
+            const dataPoint = perDate.get(label);
+            if (!dataPoint) return null;
+            return weightValue === null ? Number(dataPoint.maxWeight.toFixed(1)) : dataPoint.totalReps;
+          });
+
+          const tone = palette[colorIndex % palette.length];
+          colorIndex += 1;
+
+          return {
+            label: weightValue === null ? `${exerciseName} • Load` : `${exerciseName} • Reps @ ${weightValue}kg`,
+            data: dataSeries,
+            borderColor: tone,
+            backgroundColor: `${tone}33`,
+            borderWidth: 2,
+            pointBackgroundColor: tone,
+            pointBorderColor: tone,
+            pointRadius: 4,
+            pointHoverRadius: 5,
+            tension: 0.35,
+            spanGaps: true,
+          };
+        });
+
+        return { labels, datasets };
+      }
+
+      function renderChart() {
+        const filtered = filterWorkouts();
+        const weightValue = weightSelect.value ? Number(weightSelect.value) : null;
+
+        if (!filtered.length) {
+          emptyMessage.hidden = false;
+          if (chart) {
+            chart.destroy();
+            chart = null;
+          }
+          return;
+        }
+
+        const { labels, datasets } = aggregate(filtered, weightValue);
+        const hasValidPoint = datasets.some((dataset) =>
+          dataset.data.some((value) => value !== null && value !== 0)
+        );
+
+        if (!labels.length || !datasets.length || !hasValidPoint) {
+          emptyMessage.hidden = false;
+          if (chart) {
+            chart.destroy();
+            chart = null;
+          }
+          return;
+        }
+
+        emptyMessage.hidden = true;
+
+        const options = {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: "rgba(214, 224, 219, 0.85)" },
+            },
+            tooltip: {
+              callbacks: {
+                label: (context) => {
+                  const value = context.parsed.y ?? 0;
+                  return weightValue === null ? `Weight: ${value.toFixed(1)} kg` : `Reps: ${value}`;
+                },
+              },
+            },
+          },
+          scales: {
+            x: {
+              grid: { color: "rgba(70, 90, 82, 0.25)" },
+              ticks: { color: "rgba(188, 204, 196, 0.75)" },
+            },
+            y: {
+              beginAtZero: true,
+              grid: { color: "rgba(70, 90, 82, 0.22)" },
+              ticks: {
+                color: "rgba(188, 204, 196, 0.75)",
+                callback: (value) => (weightValue === null ? `${value} kg` : value),
+              },
+            },
+          },
+          interaction: {
+            mode: "nearest",
+            intersect: false,
+          },
+        };
+
+        const data = { labels, datasets };
+
+        if (chart) {
+          chart.destroy();
+        }
+
+        chart = new Chart(ctx, { type: "line", data, options });
+      }
+
+      bodyPartSelect.addEventListener("change", () => {
+        renderExercises(bodyPartSelect.value);
+        renderChart();
+      });
+
+      weightSelect.addEventListener("change", renderChart);
+
+      if (!bodyPartSelect.value) {
+        const availableParts = Array.from(new Set(workouts.map((entry) => entry.body_part)));
+        if (availableParts.length) {
+          bodyPartSelect.value = availableParts[0];
+        }
+      }
+
+      renderExercises(bodyPartSelect.value);
+      renderChart();
+    });
+  </script>
+{% endblock %}
