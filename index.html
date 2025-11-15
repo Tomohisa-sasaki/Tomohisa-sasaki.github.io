@@ -8,8 +8,19 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="layout">
-    <header class="header">
+  <div class="motion-backdrop" aria-hidden="true">
+    <div class="motion-backdrop__orb motion-backdrop__orb--one"></div>
+    <div class="motion-backdrop__orb motion-backdrop__orb--two"></div>
+    <div class="motion-backdrop__grid"></div>
+    <div class="motion-backdrop__pulse"></div>
+  </div>
+  <div class="scroll-progress" aria-hidden="true">
+    <span class="scroll-progress__track"></span>
+    <span class="scroll-progress__indicator"></span>
+  </div>
+  <div class="layout" data-motion-group>
+    <header class="header" data-motion>
+      <span class="header__halo" aria-hidden="true"></span>
       <div class="header__search">
         <div class="header__search-field">
           <span class="header__search-icon">
@@ -27,7 +38,7 @@
 
     <main class="main">
       <section class="grid">
-        <article class="card biography-card">
+        <article class="card biography-card" data-motion>
           <h2 class="card__title">Biography</h2>
           <div class="timeline-shell">
             <ul class="timeline">
@@ -56,7 +67,7 @@
           </div>
         </article>
 
-        <article class="card card--accent research-card" tabindex="0" aria-expanded="false">
+        <article class="card card--accent research-card" tabindex="0" aria-expanded="false" data-motion data-motion-speed="slow">
           <div class="research-summary">
             <h2 class="card__title">Research Fields</h2>
             <ul class="chip-list">
@@ -141,31 +152,31 @@
         </article>
       </section>
 
-      <section class="card card--wide">
+      <section class="card card--wide" data-motion>
         <h2 class="card__title">Current Focus</h2>
         <div class="focus-grid">
-          <div class="focus">
+          <div class="focus" data-motion>
             <h3 class="focus__title">Human-Centered AI Design</h3>
             <p class="focus__body">
               Building explainable agent architectures that clarify decision pathways while aligning with nuanced
               user narratives and values.
             </p>
           </div>
-          <div class="focus">
+          <div class="focus" data-motion>
             <h3 class="focus__title">Mental Health Support</h3>
             <p class="focus__body">
               Leveraging real-time neural and physiological signals to infer wellness states and trigger meaningful
               interventions in digital therapeutics.
             </p>
           </div>
-          <div class="focus">
+          <div class="focus" data-motion>
             <h3 class="focus__title">Behavioral Economics × AI</h3>
             <p class="focus__body">
               Designing incentive-aware algorithms that translate experimental insights into scalable,
               real-world behavioral systems.
             </p>
           </div>
-          <div class="focus">
+          <div class="focus" data-motion>
             <h3 class="focus__title">Financial AI Systems</h3>
             <p class="focus__body">
               Architecting self-directed agents that parse financial statements, learn market signals, and deliver
@@ -175,7 +186,7 @@
         </div>
       </section>
 
-      <section class="card card--wide card--3d">
+      <section class="card card--wide card--3d" data-motion data-motion-speed="slow">
         <h2 class="card__title">Hobbies & Personal Projects</h2>
         <p class="card__body">
           Outside of the lab, Tomohisa explores embodied intelligence through product prototyping.
@@ -186,19 +197,19 @@
             <input type="checkbox" id="hobby-toggle" class="hobby-toggle" aria-controls="hobby-panel">
             <label class="toggle-button" for="hobby-toggle">View App Features</label>
             <div class="hobby-panel" id="hobby-panel" aria-live="polite">
-              <article class="feature-card">
+              <article class="feature-card" data-motion>
                 <h3 class="feature-card__title">Adaptive Routines</h3>
                 <p class="feature-card__body">
                   Auto-adjusts sets and loads with 3D motion analysis powered by embedded device sensors.
                 </p>
               </article>
-              <article class="feature-card">
+              <article class="feature-card" data-motion>
                 <h3 class="feature-card__title">Recovery Dashboard</h3>
                 <p class="feature-card__body">
                   Surfaces HRV-driven readiness insights and recommends sleep or mobility protocols when needed.
                 </p>
               </article>
-              <article class="feature-card">
+              <article class="feature-card" data-motion>
                 <h3 class="feature-card__title">Community Challenges</h3>
                 <p class="feature-card__body">
                   Hosts cooperative micro-challenges that blend habit loops with supportive social accountability.
@@ -210,7 +221,7 @@
             <input type="checkbox" id="hobby-preview-toggle" class="hobby-toggle hobby-preview-toggle" aria-controls="hobby-preview">
             <label class="toggle-button toggle-button--ghost" for="hobby-preview-toggle">Launch Interactive Preview</label>
             <div class="hobby-panel hobby-panel--preview" id="hobby-preview">
-              <div class="trainer-sim" data-trainer>
+              <div class="trainer-sim" data-trainer data-motion data-motion-speed="slow">
                 <header class="trainer-sim__header">
                   <div>
                     <h3>Muscle Log Companion</h3>
@@ -395,6 +406,61 @@
         ) {
           cursorRing.classList.remove("cursor-ring--active");
         }
+      });
+    })();
+
+    (function () {
+      const body = document.body;
+      if (!body) {
+        return;
+      }
+      const update = () => {
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollHeight <= 0 ? 0 : window.scrollY / scrollHeight;
+        body.style.setProperty("--scroll-progress", progress.toFixed(3));
+      };
+      window.addEventListener("scroll", update, { passive: true });
+      window.addEventListener("resize", update);
+      update();
+    })();
+
+    (function () {
+      const revealTargets = document.querySelectorAll("[data-motion]");
+      if (!revealTargets.length) {
+        return;
+      }
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+        revealTargets.forEach((element) => {
+          element.classList.add("is-visible");
+        });
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.2,
+          rootMargin: "0px 0px -10% 0px"
+        }
+      );
+
+      revealTargets.forEach((element, index) => {
+        element.style.setProperty("--motion-index", String(index % 10));
+        const speed = element.dataset.motionSpeed;
+        if (speed === "slow") {
+          element.style.setProperty("--motion-duration", "1200ms");
+        } else if (speed === "fast") {
+          element.style.setProperty("--motion-duration", "600ms");
+        }
+        observer.observe(element);
       });
     })();
 
