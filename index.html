@@ -362,6 +362,14 @@
             </div>
           </article>
           <form class="contact-form" aria-label="Contact form">
+            <div class="contact-form__header">
+              <span class="contact-form__badge">Message Lab</span>
+              <div>
+                <h4>Let&apos;s co-create</h4>
+                <p>Send a note about partnerships, research, or prototype ideas.</p>
+              </div>
+            </div>
+
             <label class="contact-label" for="contact-name">Your name</label>
             <input class="contact-input" type="text" id="contact-name" name="name" placeholder="Tomohisa Sasaki" required>
 
@@ -371,7 +379,12 @@
             <label class="contact-label" for="contact-message">Message</label>
             <textarea class="contact-input contact-input--textarea" id="contact-message" name="message" rows="5" placeholder="Collaboration ideas or questions are welcome."></textarea>
 
-            <button type="submit" class="contact-submit qc-btn">Send</button>
+            <button type="submit" class="contact-submit" aria-label="Send message">
+              <span>Send</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
           </form>
         </div>
       </section>
