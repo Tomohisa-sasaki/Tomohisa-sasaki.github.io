@@ -1,242 +1,205 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tomohisa Sasaki Research Profile</title>
+  <title>Tomohisa Sasaki | Profile</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="motion-backdrop" aria-hidden="true">
-    <div class="motion-backdrop__orb motion-backdrop__orb--one"></div>
-    <div class="motion-backdrop__orb motion-backdrop__orb--two"></div>
-    <div class="motion-backdrop__grid"></div>
-    <div class="motion-backdrop__pulse"></div>
+  <div class="bg-swirl" aria-hidden="true">
+    <div class="bg-swirl__ring bg-swirl__ring--one"></div>
+    <div class="bg-swirl__ring bg-swirl__ring--two"></div>
+    <div class="bg-swirl__gradient"></div>
   </div>
-  <div class="scroll-progress" aria-hidden="true">
-    <span class="scroll-progress__track"></span>
-    <span class="scroll-progress__indicator"></span>
-  </div>
-  <div class="layout" data-motion-group>
-    <header class="header" data-motion>
-      <span class="header__halo" aria-hidden="true"></span>
-      <div class="header__search">
-        <div class="header__search-field">
-          <span class="header__search-icon">
-            <span class="header__search-circle"></span>
-          </span>
-          <span class="header__search-label">AI, economics, muscle</span>
+
+  <div class="page">
+    <aside class="profile-panel" aria-label="プロフィールとメニュー">
+      <div class="profile-card" data-motion>
+        <span class="profile-card__glow" aria-hidden="true"></span>
+        <div class="profile-card__status">
+          <span class="profile-card__pill profile-card__pill--live">Live</span>
+          <span class="profile-card__pill profile-card__pill--role">CSAIL</span>
         </div>
-      </div>
-      <div class="header__meta">
-        <div class="header__badge">Research Profile</div>
-        <h1 class="header__title">Tomohisa Sasaki</h1>
-        <p class="header__subtitle">MIT CSAIL Researcher · AI · Neuroscience · Behavioral Economics</p>
-      </div>
-    </header>
-
-    <main class="main">
-      <section class="grid">
-        <article class="card biography-card" data-motion>
-          <h2 class="card__title">Biography</h2>
-          <div class="timeline-shell">
-            <ul class="timeline">
-              <li class="timeline__item">
-                <span class="timeline__year">2019-2020</span>
-                <div class="timeline__detail">
-                  <span class="timeline__highlight">MITES Summer</span>
-                  <span class="timeline__sub">Engineering immersion track</span>
-                </div>
-              </li>
-              <li class="timeline__item">
-                <span class="timeline__year">2022-20××</span>
-                <div class="timeline__detail">
-                  <span class="timeline__highlight">MIT CSAIL</span>
-                  <span class="timeline__sub">Human-AI research residency (Mental Healthcare)</span>
-                </div>
-              </li>
-              <li class="timeline__item">
-                <span class="timeline__year">2024-2025</span>
-                <div class="timeline__detail">
-                  <span class="timeline__highlight">Google Researcher</span>
-                  <span class="timeline__sub">AI research internship</span>
-                </div>
-              </li>
-            </ul>
+        <figure class="profile-card__avatar">
+          <img src="image.png" alt="Tomohisa Sasaki" loading="lazy">
+        </figure>
+        <div class="profile-card__meta">
+          <p class="profile-card__label">Human-AI Researcher</p>
+          <h1 class="profile-card__name">Tomohisa Sasaki</h1>
+          <div class="profile-card__tags">
+            <span>#AI</span>
+            <span>#Finance</span>
+            <span>#Healthcare</span>
           </div>
-        </article>
-
-        <article class="card card--accent research-card" tabindex="0" aria-expanded="false" data-motion data-motion-speed="slow">
-          <div class="research-summary">
-            <h2 class="card__title">Research Fields</h2>
-            <ul class="chip-list">
-              <li class="chip">AI Systems Engineering</li>
-              <li class="chip">Neuroscience & Mental Health</li>
-              <li class="chip">Behavioral Economics</li>
-            </ul>
-            <p class="card__body">
-              Merging adaptive AI interfaces with neural signal analytics to support personal behavior change
-              and to unlock more empathetic, human-aware technology ecosystems.
-            </p>
+          <p class="profile-card__annotation">Neuro-adaptive systems / Behavioral economics / Embodied intelligence</p>
+        </div>
+        <div class="profile-card__metrics">
+          <div>
+            <span class="profile-card__metric-label">研究協業</span>
+            <strong>24+</strong>
           </div>
-          <div class="research-visual" aria-hidden="true">
-            <div class="visual-flow" role="presentation">
-              <div class="visual-toolbar">
-                <button type="button" class="visual-tool is-active" data-flow-view="overview">Overview</button>
-                <button type="button" class="visual-tool" data-flow-view="deep">Deep Dive</button>
-              </div>
-              <div class="visual-canvas">
-                <div class="visual-node visual-node--capture" data-step="Capture">
-                  <span class="visual-node__handle visual-node__handle--left"></span>
-                  <span class="visual-node__handle visual-node__handle--right"></span>
-                  <header class="visual-node__header">
-                    <span>Neural Capture</span>
-                  </header>
-                  <p class="visual-node__body">
-                    Dense EEG, MEG, and fMRI sessions stream raw volumes into a neuro-cloud, tagging each scan with behavioral context.
-                  </p>
-                  <div class="visual-node__viz visual-node__viz--brain"></div>
-                </div>
-                <div class="visual-connection visual-connection--capture-processing" aria-hidden="true"></div>
-                <div class="visual-node visual-node--processing" data-step="Process">
-                  <span class="visual-node__handle visual-node__handle--left"></span>
-                  <span class="visual-node__handle visual-node__handle--right"></span>
-                  <header class="visual-node__header">
-                    <span>Signal Processing</span>
-                  </header>
-                  <p class="visual-node__body">
-                    Adaptive filters, graph spectral decompositions, and spike sorting isolate biomarkers and artifacts in real time.
-                  </p>
-                  <div class="visual-node__viz visual-node__viz--wave"></div>
-                </div>
-                <div class="visual-connection visual-connection--processing-visual" aria-hidden="true"></div>
-                <div class="visual-node visual-node--visualization" data-step="Visualize">
-                  <span class="visual-node__handle visual-node__handle--left"></span>
-                  <span class="visual-node__handle visual-node__handle--right"></span>
-                  <header class="visual-node__header">
-                    <span>Visualization</span>
-                  </header>
-                  <p class="visual-node__body">
-                    Spatiotemporal embeddings render uncertainty cones, region co-activations, and subject-level dashboards.
-                  </p>
-                  <div class="visual-node__viz visual-node__viz--mesh"></div>
-                </div>
-                <div class="visual-connection visual-connection--visual-ai" aria-hidden="true"></div>
-                <div class="visual-node visual-node--ai" data-step="Infer">
-                  <span class="visual-node__handle visual-node__handle--left"></span>
-                  <span class="visual-node__handle visual-node__handle--right"></span>
-                  <header class="visual-node__header">
-                    <span>AI Inference</span>
-                  </header>
-                  <p class="visual-node__body">
-                    Multimodal transformers link neural events to behavioral intent, generating transparent counterfactuals.
-                  </p>
-                  <div class="visual-node__viz visual-node__viz--network"></div>
-                </div>
-                <div class="visual-connection visual-connection--ai-behavior" aria-hidden="true"></div>
-                <div class="visual-node visual-node--behavior" data-step="Simulate">
-                  <span class="visual-node__handle visual-node__handle--left"></span>
-                  <span class="visual-node__handle visual-node__handle--right"></span>
-                  <header class="visual-node__header">
-                    <span>Behavioral Economics</span>
-                  </header>
-                  <p class="visual-node__body">
-                    Agent simulations forecast incentive outcomes and co-design interventions with clinicians.
-                  </p>
-                  <div class="visual-node__viz visual-node__viz--chart"></div>
-                </div>
-              </div>
+          <div>
+            <span class="profile-card__metric-label">プロトタイプ</span>
+            <strong>12</strong>
+          </div>
+          <div>
+            <span class="profile-card__metric-label">Mentorship</span>
+            <strong>18</strong>
+          </div>
+        </div>
+        <a class="profile-card__cta" href="#contact">コラボ依頼</a>
+      </div>
+      <nav class="profile-nav" aria-label="セクションメニュー">
+        <button class="profile-nav__item is-active" data-nav-target="#bio">略歴</button>
+        <button class="profile-nav__item" data-nav-target="#research">研究内容</button>
+        <button class="profile-nav__item" data-nav-target="#products">プロダクト紹介</button>
+        <button class="profile-nav__item" data-nav-target="#contact">コンタクト</button>
+      </nav>
+      <a class="embed-card embed-card--linkedin" href="https://www.linkedin.com/in/tomohisa-sasaki" target="_blank" rel="noreferrer">
+        <div class="embed-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+            <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V24h-4V8zm7.5 0h3.8v2.2h.05c.53-1 1.82-2.2 3.74-2.2 4 0 4.74 2.6 4.74 5.9V24h-4v-7.6c0-1.8-.03-4.1-2.5-4.1-2.5 0-2.9 1.9-2.9 4v7.7h-4V8z"></path>
+          </svg>
+        </div>
+        <div class="embed-card__body">
+          <p class="embed-card__label">LinkedIn</p>
+          <p class="embed-card__title">tomohisa-ai</p>
+          <p class="embed-card__meta">AI × Finance の最新アップデートを配信中</p>
+        </div>
+        <span class="embed-card__status">Follow</span>
+      </a>
+      <a class="floating-cta" href="#research">最新の研究をみる</a>
+    </aside>
+
+    <main class="content">
+      <section id="bio" class="section" data-motion>
+        <header class="section__header">
+          <p class="section__eyebrow">Career Timeline</p>
+          <h2 class="section__title">略歴</h2>
+          <p class="section__lead">MIT での出発から Google AI での挑戦まで、流れるようなキャリアを下から上へトレースします。</p>
+        </header>
+        <div class="timeline" role="list">
+          <article class="timeline__item" role="listitem">
+            <div class="timeline__year">2019</div>
+            <div class="timeline__body">
+              <h3>MITES Summer Program @ MIT</h3>
+              <p>工学没入型トラックで、行動科学と機械学習を横断する初期の探究を開始。</p>
             </div>
-          </div>
-        </article>
-      </section>
-
-      <section class="card card--wide" data-motion>
-        <h2 class="card__title">Current Focus</h2>
-        <div class="focus-grid">
-          <div class="focus" data-motion>
-            <h3 class="focus__title">Human-Centered AI Design</h3>
-            <p class="focus__body">
-              Building explainable agent architectures that clarify decision pathways while aligning with nuanced
-              user narratives and values.
-            </p>
-          </div>
-          <div class="focus" data-motion>
-            <h3 class="focus__title">Mental Health Support</h3>
-            <p class="focus__body">
-              Leveraging real-time neural and physiological signals to infer wellness states and trigger meaningful
-              interventions in digital therapeutics.
-            </p>
-          </div>
-          <div class="focus" data-motion>
-            <h3 class="focus__title">Behavioral Economics × AI</h3>
-            <p class="focus__body">
-              Designing incentive-aware algorithms that translate experimental insights into scalable,
-              real-world behavioral systems.
-            </p>
-          </div>
-          <div class="focus" data-motion>
-            <h3 class="focus__title">Financial AI Systems</h3>
-            <p class="focus__body">
-              Architecting self-directed agents that parse financial statements, learn market signals, and deliver
-              transparent, auditable recommendations for investment and risk teams.
-            </p>
-          </div>
+          </article>
+          <article class="timeline__item" role="listitem">
+            <div class="timeline__year">2022</div>
+            <div class="timeline__body">
+              <h3>MIT Research Assistant</h3>
+              <p>CSAIL でヒューマンセンタード AI を研究。メンタルヘルス×AI の実装指針を策定。</p>
+            </div>
+          </article>
+          <article class="timeline__item" role="listitem">
+            <div class="timeline__year">2024</div>
+            <div class="timeline__body">
+              <h3>Google AI Researcher</h3>
+              <p>AI とファイナンスの交差領域で、説明可能なエージェントをリードし、臨床現場とも連携。</p>
+            </div>
+          </article>
         </div>
       </section>
 
-      <section class="card card--wide card--3d" data-motion data-motion-speed="slow">
-        <h2 class="card__title">Hobbies & Personal Projects</h2>
-        <p class="card__body">
-          Outside of the lab, Tomohisa explores embodied intelligence through product prototyping.
-          A highlight is a strength training companion app that gamifies progressive overload and recovery insights.
-        </p>
-        <div class="hobby-module">
-          <div class="hobby-block">
-            <input type="checkbox" id="hobby-toggle" class="hobby-toggle" aria-controls="hobby-panel">
-            <label class="toggle-button" for="hobby-toggle">View App Features</label>
-            <div class="hobby-panel" id="hobby-panel" aria-live="polite">
-              <article class="feature-card" data-motion>
-                <h3 class="feature-card__title">Adaptive Routines</h3>
-                <p class="feature-card__body">
-                  Auto-adjusts sets and loads with 3D motion analysis powered by embedded device sensors.
-                </p>
-              </article>
-              <article class="feature-card" data-motion>
-                <h3 class="feature-card__title">Recovery Dashboard</h3>
-                <p class="feature-card__body">
-                  Surfaces HRV-driven readiness insights and recommends sleep or mobility protocols when needed.
-                </p>
-              </article>
-              <article class="feature-card" data-motion>
-                <h3 class="feature-card__title">Community Challenges</h3>
-                <p class="feature-card__body">
-                  Hosts cooperative micro-challenges that blend habit loops with supportive social accountability.
-                </p>
-              </article>
-            </div>
+      <section id="research" class="section" data-motion>
+        <header class="section__header">
+          <p class="section__eyebrow">AI × Healthcare</p>
+          <h2 class="section__title">研究内容</h2>
+        </header>
+        <div class="research-grid">
+          <div class="research-grid__text">
+            <p>
+              AI とヘルスケアの境界で、脳波・fMRI・デジタルバイオマーカーを解析できるハイブリッド AI を構築。
+              パーソナルなニューロデータを高速に理解し、臨床意思決定を支援するプロトコルを開発しています。
+            </p>
+            <ul>
+              <li>脳活動の多解像度解析とアテンションマップのインタラクティブ可視化</li>
+              <li>行動経済モデルを組み込んだ介入シミュレータ</li>
+              <li>医療従事者向けの説明可能なダッシュボード</li>
+            </ul>
           </div>
-          <div class="hobby-block">
-            <input type="checkbox" id="hobby-preview-toggle" class="hobby-toggle hobby-preview-toggle" aria-controls="hobby-preview">
-            <label class="toggle-button toggle-button--ghost" for="hobby-preview-toggle">Launch Interactive Preview</label>
-            <div class="hobby-panel hobby-panel--preview" id="hobby-preview">
-              <div class="trainer-sim" data-trainer data-motion data-motion-speed="slow">
+          <div class="research-grid__visual" aria-hidden="true">
+            <div class="research-orb">
+              <span class="research-orb__pulse"></span>
+              <span class="research-orb__node research-orb__node--one"></span>
+              <span class="research-orb__node research-orb__node--two"></span>
+              <span class="research-orb__node research-orb__node--three"></span>
+            </div>
+            <p class="research-grid__caption">Neuro-pattern decoding pipeline</p>
+          </div>
+        </div>
+        <div class="research-panels">
+          <article class="research-panel">
+            <div class="research-panel__icon" aria-hidden="true">01</div>
+            <h3>Neural capture</h3>
+            <p>高密度 EEG/MEG から行動コンテキストを抽出し、パーソナライズされた特徴空間を構築。</p>
+          </article>
+          <article class="research-panel">
+            <div class="research-panel__icon" aria-hidden="true">02</div>
+            <h3>Adaptive inference</h3>
+            <p>グラフ Transformer を使い、脳活動とバイタルの多変量シグナルをリアルタイム推論。</p>
+          </article>
+          <article class="research-panel">
+            <div class="research-panel__icon" aria-hidden="true">03</div>
+            <h3>Clinical UX</h3>
+            <p>説明可能なストーリーカードで医師と患者をつなぎ、介入の意思決定を可視化。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="products" class="section" data-motion>
+        <header class="section__header">
+          <p class="section__eyebrow">Product Stories</p>
+          <h2 class="section__title">プロダクト紹介</h2>
+          <p class="section__lead">Finance × AI の意思決定ツールと、筋肉ログのフルスタックプロトタイプをまず紹介します。</p>
+        </header>
+        <div class="product-chips" role="list">
+          <span class="product-chip product-chip--finance" role="listitem">Finance Intelligence</span>
+          <span class="product-chip product-chip--health" role="listitem">Healthcare</span>
+          <span class="product-chip product-chip--muscle" role="listitem">Muscle Log</span>
+        </div>
+        <div class="product-grid">
+          <article class="product-card product-card--finance">
+            <div class="product-card__header">
+              <p class="product-card__eyebrow">Finance Signal Lab</p>
+              <h3>Alpha Canvas</h3>
+            </div>
+            <p class="product-card__body">
+              上場企業の決算テキスト・ESG 指標・マクロシグナルをクロス解析し、リスクと機会をパステルな可視化で提示するリーンプロダクト。
+            </p>
+            <ul class="product-card__list">
+              <li>自然言語グラフ × 財務ファンダメンタルのペアリング</li>
+              <li>リスク・α・インパクト指標を並列比較</li>
+              <li>AI レコメンドと人間の説明責任を両立</li>
+            </ul>
+          </article>
+
+          <article class="product-card product-card--muscle">
+            <div class="product-card__header">
+              <p class="product-card__eyebrow">Embodied Intelligence</p>
+              <h3>Muscle Log Companion</h3>
+            </div>
+            <p class="product-card__body">
+              ファイルにもある Flask プロトタイプをブラッシュアップし、筋トレセッションをマルチデバイスで記録できるトレーナーアプリ UI を再現。
+            </p>
+            <div class="trainer-wrapper">
+              <div class="trainer-sim" data-trainer>
                 <header class="trainer-sim__header">
                   <div>
-                    <h3>Muscle Log Companion</h3>
-                    <p>Prototype dashboard mirroring the Flask app: schedule, analytics, and daily session composer.</p>
+                    <p class="trainer-sim__eyebrow">Session builder</p>
+                    <h4>Weekly progressive plan</h4>
                   </div>
                   <div class="trainer-sim__period" data-trainer-period></div>
                 </header>
                 <div class="trainer-sim__layout">
-                  <div class="trainer-sim__cols">
-                    <section class="trainer-editor" aria-label="Session Composer">
-                      <h4>Session Composer</h4>
-                      <label class="trainer-label" for="trainer-date">Session date</label>
-                      <input class="trainer-input" type="date" id="trainer-date" data-trainer-date>
+                  <section class="trainer-editor" aria-label="セッション作成">
+                    <label class="trainer-label" for="trainer-date">日付</label>
+                    <input class="trainer-input" type="date" id="trainer-date" data-trainer-date>
 
-                    <label class="trainer-label" for="trainer-focus">Focus area</label>
+                    <label class="trainer-label" for="trainer-focus">フォーカス部位</label>
                     <select class="trainer-input" id="trainer-focus" data-trainer-focus>
                       <option value="chest">Chest</option>
                       <option value="shoulders">Shoulders</option>
@@ -245,195 +208,145 @@
                       <option value="back">Back</option>
                     </select>
 
-                    <label class="trainer-label" for="trainer-movement">Movement</label>
+                    <label class="trainer-label" for="trainer-movement">ムーブメント</label>
                     <select class="trainer-input" id="trainer-movement" data-trainer-movement></select>
 
                     <div class="trainer-grid">
-                      <label class="trainer-label" for="trainer-sets">Sets</label>
-                      <input class="trainer-input" type="number" id="trainer-sets" min="1" max="8" value="3" data-trainer-sets>
-
-                      <label class="trainer-label" for="trainer-reps">Reps</label>
-                      <input class="trainer-input" type="number" id="trainer-reps" min="1" max="25" value="8" data-trainer-reps>
-
-                      <label class="trainer-label" for="trainer-weight">Weight (kg)</label>
-                      <input class="trainer-input" type="number" id="trainer-weight" min="0" max="400" value="60" data-trainer-weight>
+                      <div>
+                        <label class="trainer-label" for="trainer-sets">セット</label>
+                        <input class="trainer-input" type="number" id="trainer-sets" min="1" max="8" value="3" data-trainer-sets>
+                      </div>
+                      <div>
+                        <label class="trainer-label" for="trainer-reps">レップ</label>
+                        <input class="trainer-input" type="number" id="trainer-reps" min="1" max="25" value="8" data-trainer-reps>
+                      </div>
+                      <div>
+                        <label class="trainer-label" for="trainer-weight">重量 (kg)</label>
+                        <input class="trainer-input" type="number" id="trainer-weight" min="0" max="400" value="60" data-trainer-weight>
+                      </div>
                     </div>
 
-                    <label class="trainer-label" for="trainer-notes">Notes</label>
-                    <textarea class="trainer-input trainer-input--textarea" id="trainer-notes" rows="2" placeholder="Tempo, cues, readiness..." data-trainer-notes></textarea>
+                    <label class="trainer-label" for="trainer-notes">メモ</label>
+                    <textarea class="trainer-input trainer-input--textarea" id="trainer-notes" rows="2" data-trainer-notes placeholder="Tempo, cues, readiness..."></textarea>
 
                     <div class="trainer-actions">
-                      <button type="button" class="trainer-btn trainer-btn--primary" data-trainer-add>Add movement</button>
-                      <button type="button" class="trainer-btn" data-trainer-save>Commit day</button>
-                      <button type="button" class="trainer-btn trainer-btn--ghost" data-trainer-clear>Reset day</button>
+                      <button type="button" class="trainer-btn trainer-btn--primary" data-trainer-add>追加</button>
+                      <button type="button" class="trainer-btn" data-trainer-save>記録</button>
+                      <button type="button" class="trainer-btn trainer-btn--ghost" data-trainer-clear>クリア</button>
                     </div>
 
                     <div class="trainer-log">
-                      <h5>Movements logged</h5>
+                      <h5>ログ</h5>
                       <ul class="trainer-log__list" data-trainer-log></ul>
-                      <p class="trainer-log__empty" data-trainer-log-empty>No movements yet. Add one above.</p>
+                      <p class="trainer-log__empty" data-trainer-log-empty>まだムーブメントがありません。</p>
                     </div>
-                    </section>
+                  </section>
 
-                    <section class="trainer-calendar" aria-label="Training Calendar">
-                      <header>
-                        <h4>Training Calendar</h4>
-                        <div class="trainer-calendar__controls">
-                          <button type="button" data-trainer-month="prev" aria-label="Previous month">‹</button>
-                          <span data-trainer-calendar-title></span>
-                          <button type="button" data-trainer-month="next" aria-label="Next month">›</button>
-                        </div>
-                      </header>
-                      <div class="trainer-calendar__grid" data-trainer-calendar></div>
-                      <div class="trainer-tags">
-                        <span data-tag="chest">Chest</span><span data-tag="shoulders">Shoulders</span><span data-tag="arms">Arms</span><span data-tag="legs">Legs</span><span data-tag="back">Back</span>
+                  <section class="trainer-calendar" aria-label="トレーニングカレンダー">
+                    <header>
+                      <div class="trainer-calendar__controls">
+                        <button type="button" data-trainer-month="prev" aria-label="先月">‹</button>
+                        <span data-trainer-calendar-title></span>
+                        <button type="button" data-trainer-month="next" aria-label="翌月">›</button>
                       </div>
-                    </section>
-                  </div>
+                    </header>
+                    <div class="trainer-calendar__grid" data-trainer-calendar></div>
+                    <div class="trainer-tags">
+                      <span data-tag="chest">Chest</span>
+                      <span data-tag="shoulders">Shoulders</span>
+                      <span data-tag="arms">Arms</span>
+                      <span data-tag="legs">Legs</span>
+                      <span data-tag="back">Back</span>
+                    </div>
+                  </section>
 
-                  <section class="trainer-analytics" aria-label="Analytics">
+                  <section class="trainer-analytics" aria-label="アナリティクス">
                     <header class="trainer-analytics__header">
-                      <div class="trainer-analytics__title">
-                        <h4>Training Insights</h4>
-                        <span data-trainer-trend-subtitle>All movements · Volume</span>
+                      <div>
+                        <h5>トレンド</h5>
+                        <span data-trainer-trend-subtitle>Volume vs. Quality</span>
                       </div>
                       <div class="trainer-analytics__filters">
                         <select class="trainer-input trainer-input--compact" data-trainer-filter-movement>
                           <option value="all">All Movements</option>
                         </select>
                         <select class="trainer-input trainer-input--compact" data-trainer-filter-metric>
-                          <option value="volume">Volume (sets×reps×weight)</option>
-                          <option value="reps">Total reps</option>
-                          <option value="weight">Average weight</option>
+                          <option value="volume">Volume</option>
+                          <option value="reps">Reps</option>
+                          <option value="weight">Weight</option>
                         </select>
                       </div>
                     </header>
                     <div class="trainer-chart" data-trainer-chart></div>
                     <div class="trainer-summary">
-                      <div>
-                        <span>Total Sets</span>
-                        <strong data-trainer-total-sets>0</strong>
-                      </div>
-                      <div>
-                        <span>Total Load</span>
-                        <strong data-trainer-total-load>0 kg</strong>
-                      </div>
-                      <div>
-                        <span>Focus Mix</span>
-                        <strong data-trainer-focus-mix>—</strong>
-                      </div>
+                      <div>Sets <strong data-trainer-total-sets>0</strong></div>
+                      <div>Total load <strong data-trainer-total-load>0 kg</strong></div>
+                      <div>Focus mix <strong data-trainer-focus-mix>—</strong></div>
                     </div>
-                    <footer data-trainer-status data-tone="neutral">Session idle</footer>
+                    <footer class="trainer-status" data-trainer-status data-tone="neutral">Session idle</footer>
                   </section>
                 </div>
               </div>
             </div>
-          </div>
+          </article>
         </div>
       </section>
 
-      <section class="card card--wide">
-        <h2 class="card__title">Contact</h2>
-        <form class="contact-form" action="#" method="post">
-          <label class="form-label" for="email">Email</label>
-          <input class="form-input" id="email" name="email" type="email" placeholder="you@example.com" required>
+      <section id="contact" class="section" data-motion>
+        <header class="section__header">
+          <p class="section__eyebrow">Let&apos;s Build Together</p>
+          <h2 class="section__title">コンタクト</h2>
+          <p class="section__lead">メッセージを残していただければ、AI×Finance/Healthcare の次の実験について一緒に議論できます。</p>
+        </header>
+        <div class="contact-grid">
+          <article class="contact-highlight">
+            <p class="contact-highlight__eyebrow">Response within 48h</p>
+            <h3>AI×Financeの問いをお待ちしています</h3>
+            <ul>
+              <li>ヘルスケア連携 / 臨床研究の共創</li>
+              <li>ファイナンス × 生成 AI の R&amp;D</li>
+              <li>筋トレアプリやウェアラブルの実装相談</li>
+            </ul>
+            <div class="contact-highlight__avatars" aria-label="Recent collaborators">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </div>
+          </article>
+          <form class="contact-form">
+            <label class="contact-label" for="contact-name">お名前</label>
+            <input class="contact-input" type="text" id="contact-name" name="name" placeholder="Tomohisa Sasaki" required>
 
-          <label class="form-label" for="message">Message</label>
-          <textarea class="form-input form-input--textarea" id="message" name="message" placeholder="Share how we can collaborate..." required></textarea>
+            <label class="contact-label" for="contact-email">メールアドレス</label>
+            <input class="contact-input" type="email" id="contact-email" name="email" placeholder="name@example.com" required>
 
-          <button class="form-submit" type="submit">Send Message</button>
-        </form>
+            <label class="contact-label" for="contact-message">メッセージ</label>
+            <textarea class="contact-input contact-input--textarea" id="contact-message" name="message" rows="5" placeholder="コラボや質問など、お気軽にどうぞ"></textarea>
+
+            <button type="submit" class="contact-submit">送信</button>
+          </form>
+        </div>
       </section>
     </main>
-
-    <footer class="footer">
-      <p>© Tomohisa Sasaki</p>
-    </footer>
   </div>
+
   <script>
     (function () {
-      if (!window.matchMedia("(pointer: fine)").matches) {
-        return;
-      }
-
-      const body = document.body;
-      body.classList.add("has-custom-cursor");
-
-      const cursorDot = document.createElement("div");
-      const cursorRing = document.createElement("div");
-      cursorDot.className = "cursor-dot";
-      cursorRing.className = "cursor-ring";
-      body.append(cursorRing, cursorDot);
-
-      const setPosition = (x, y) => {
-        const posX = `${x}px`;
-        const posY = `${y}px`;
-        cursorDot.style.setProperty("--cursor-x", posX);
-        cursorDot.style.setProperty("--cursor-y", posY);
-        cursorRing.style.setProperty("--cursor-x", posX);
-        cursorRing.style.setProperty("--cursor-y", posY);
-      };
-
-      let latestX = window.innerWidth / 2;
-      let latestY = window.innerHeight / 2;
-      setPosition(latestX, latestY);
-
-      document.addEventListener("pointermove", (event) => {
-        latestX = event.clientX;
-        latestY = event.clientY;
-        requestAnimationFrame(() => setPosition(latestX, latestY));
-      }, { passive: true });
-
-      document.addEventListener("pointerdown", () => {
-        cursorRing.classList.add("cursor-ring--click");
-      });
-
-      document.addEventListener("pointerup", () => {
-        cursorRing.classList.remove("cursor-ring--click");
-      });
-
-      const interactiveSelector = "a, button, input, textarea, select, .toggle-button, .feature-card, .card";
-      document.addEventListener("pointerover", (event) => {
-        if (event.target.closest(interactiveSelector)) {
-          cursorRing.classList.add("cursor-ring--active");
+      const navButtons = document.querySelectorAll('[data-nav-target]');
+      const sections = [];
+      navButtons.forEach((button) => {
+        const targetSelector = button.dataset.navTarget;
+        const targetSection = document.querySelector(targetSelector);
+        if (!targetSection) {
+          return;
         }
-      });
-
-      document.addEventListener("pointerout", (event) => {
-        if (
-          event.target.closest(interactiveSelector) &&
-          (!event.relatedTarget || !event.relatedTarget.closest(interactiveSelector))
-        ) {
-          cursorRing.classList.remove("cursor-ring--active");
-        }
-      });
-    })();
-
-    (function () {
-      const body = document.body;
-      if (!body) {
-        return;
-      }
-      const update = () => {
-        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = scrollHeight <= 0 ? 0 : window.scrollY / scrollHeight;
-        body.style.setProperty("--scroll-progress", progress.toFixed(3));
-      };
-      window.addEventListener("scroll", update, { passive: true });
-      window.addEventListener("resize", update);
-      update();
-    })();
-
-    (function () {
-      const revealTargets = document.querySelectorAll("[data-motion]");
-      if (!revealTargets.length) {
-        return;
-      }
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (prefersReducedMotion || !("IntersectionObserver" in window)) {
-        revealTargets.forEach((element) => {
-          element.classList.add("is-visible");
+        sections.push({ button, target: targetSection });
+        button.addEventListener('click', () => {
+          targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
+      });
+
+      if (!sections.length) {
         return;
       }
 
@@ -441,160 +354,151 @@
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              entry.target.classList.add("is-visible");
-              observer.unobserve(entry.target);
+              sections.forEach(({ button, target }) => {
+                if (target === entry.target) {
+                  button.classList.add('is-active');
+                } else {
+                  button.classList.remove('is-active');
+                }
+              });
             }
           });
         },
         {
-          threshold: 0.2,
-          rootMargin: "0px 0px -10% 0px"
+          root: null,
+          threshold: 0.4
         }
       );
 
-      revealTargets.forEach((element, index) => {
-        element.style.setProperty("--motion-index", String(index % 10));
-        const speed = element.dataset.motionSpeed;
-        if (speed === "slow") {
-          element.style.setProperty("--motion-duration", "1200ms");
-        } else if (speed === "fast") {
-          element.style.setProperty("--motion-duration", "600ms");
-        }
-        observer.observe(element);
-      });
+      sections.forEach(({ target }) => observer.observe(target));
     })();
 
     (function () {
-      const layout = document.querySelector(".layout");
-      const researchCard = document.querySelector(".research-card");
-      if (!layout || !researchCard) {
+      const revealTargets = document.querySelectorAll('[data-motion]');
+      if (!('IntersectionObserver' in window) || !revealTargets.length) {
+        revealTargets.forEach((el) => el.classList.add('is-visible'));
         return;
       }
-
-      const activate = () => {
-        layout.classList.add("research-active");
-        researchCard.setAttribute("aria-expanded", "true");
-      };
-      const deactivate = () => {
-        layout.classList.remove("research-active");
-        researchCard.setAttribute("aria-expanded", "false");
-      };
-
-      const supportsHover = window.matchMedia("(hover: hover)").matches;
-
-      if (supportsHover) {
-        researchCard.addEventListener("mouseenter", activate);
-        researchCard.addEventListener("mouseleave", deactivate);
-      }
-
-      researchCard.addEventListener("focusin", activate);
-      researchCard.addEventListener("focusout", (event) => {
-        if (!researchCard.contains(event.relatedTarget)) {
-          deactivate();
-        }
-      });
-
-      if (!supportsHover) {
-        researchCard.addEventListener("click", () => {
-          if (layout.classList.contains("research-active")) {
-            deactivate();
-          } else {
-            activate();
-          }
-        });
-      }
-
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          deactivate();
-        }
-      });
-
-      const visualFlow = researchCard.querySelector(".visual-flow");
-      const flowButtons = researchCard.querySelectorAll(".visual-tool");
-      if (visualFlow && flowButtons.length) {
-        visualFlow.dataset.view = "overview";
-        flowButtons.forEach((button) => {
-          button.addEventListener("click", () => {
-            flowButtons.forEach((btn) => btn.classList.remove("is-active"));
-            button.classList.add("is-active");
-            visualFlow.dataset.view = button.dataset.flowView || "overview";
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
           });
-        });
-      }
+        },
+        { threshold: 0.2, rootMargin: '0px 0px -10% 0px' }
+      );
+      revealTargets.forEach((el, index) => {
+        el.style.setProperty('--motion-index', index);
+        observer.observe(el);
+      });
     })();
 
     (function () {
-      const trainer = document.querySelector("[data-trainer]");
+      const trainer = document.querySelector('[data-trainer]');
       if (!trainer) {
         return;
       }
 
       const focusLabels = {
-        chest: "Chest",
-        shoulders: "Shoulders",
-        arms: "Arms",
-        legs: "Legs",
-        back: "Back"
+        chest: 'Chest',
+        shoulders: 'Shoulders',
+        arms: 'Arms',
+        legs: 'Legs',
+        back: 'Back'
       };
 
       const focusBadges = {
-        chest: "CH",
-        shoulders: "SH",
-        arms: "AR",
-        legs: "LG",
-        back: "BK"
+        chest: 'CH',
+        shoulders: 'SH',
+        arms: 'AR',
+        legs: 'LG',
+        back: 'BK'
       };
 
       const movementLibrary = {
-        chest: ["Flat Bench Press", "Incline Dumbbell Press", "Cable Fly", "Push-Up Variations"],
-        shoulders: ["Seated Dumbbell Press", "Lateral Raise", "Rear Delt Fly", "Face Pull"],
-        arms: ["Barbell Curl", "Hammer Curl", "Triceps Dip", "Skull Crusher"],
-        legs: ["Back Squat", "Romanian Deadlift", "Bulgarian Split Squat", "Leg Press"],
-        back: ["Deadlift", "Bent-Over Row", "Lat Pulldown", "Single-Arm Row"]
+        chest: ['Flat Bench Press', 'Incline Dumbbell Press', 'Cable Fly', 'Push-Up Variations'],
+        shoulders: ['Seated Dumbbell Press', 'Lateral Raise', 'Rear Delt Fly', 'Face Pull'],
+        arms: ['Barbell Curl', 'Hammer Curl', 'Triceps Dip', 'Skull Crusher'],
+        legs: ['Back Squat', 'Romanian Deadlift', 'Bulgarian Split Squat', 'Leg Press'],
+        back: ['Deadlift', 'Bent-Over Row', 'Lat Pulldown', 'Single-Arm Row']
       };
 
       const metricLabels = {
-        volume: "Volume (sets×reps×weight)",
-        reps: "Total reps",
-        weight: "Average weight"
+        volume: 'Volume (sets×reps×weight)',
+        reps: 'Total reps',
+        weight: 'Average weight'
       };
 
-      const today = new Date();
-      const todayISO = formatISO(today);
+      const dateInput = trainer.querySelector('[data-trainer-date]');
+      const focusSelect = trainer.querySelector('[data-trainer-focus]');
+      const movementSelect = trainer.querySelector('[data-trainer-movement]');
+      const setsInput = trainer.querySelector('[data-trainer-sets]');
+      const repsInput = trainer.querySelector('[data-trainer-reps]');
+      const weightInput = trainer.querySelector('[data-trainer-weight]');
+      const notesInput = trainer.querySelector('[data-trainer-notes]');
+      const addButton = trainer.querySelector('[data-trainer-add]');
+      const saveButton = trainer.querySelector('[data-trainer-save]');
+      const clearButton = trainer.querySelector('[data-trainer-clear]');
+      const logList = trainer.querySelector('[data-trainer-log]');
+      const logEmpty = trainer.querySelector('[data-trainer-log-empty]');
+      const calendarGrid = trainer.querySelector('[data-trainer-calendar]');
+      const calendarTitle = trainer.querySelector('[data-trainer-calendar-title]');
+      const periodEl = trainer.querySelector('[data-trainer-period]');
+      const filterMovementSelect = trainer.querySelector('[data-trainer-filter-movement]');
+      const filterMetricSelect = trainer.querySelector('[data-trainer-filter-metric]');
+      const chartContainer = trainer.querySelector('[data-trainer-chart]');
+      const trendSubtitleEl = trainer.querySelector('[data-trainer-trend-subtitle]');
+      const totalSetsEl = trainer.querySelector('[data-trainer-total-sets]');
+      const totalLoadEl = trainer.querySelector('[data-trainer-total-load]');
+      const focusMixEl = trainer.querySelector('[data-trainer-focus-mix]');
+      const statusEl = trainer.querySelector('[data-trainer-status]');
+      const monthButtons = trainer.querySelectorAll('[data-trainer-month]');
 
-      const dateInput = trainer.querySelector("[data-trainer-date]");
-      const focusSelect = trainer.querySelector("[data-trainer-focus]");
-      const movementSelect = trainer.querySelector("[data-trainer-movement]");
-      const setsInput = trainer.querySelector("[data-trainer-sets]");
-      const repsInput = trainer.querySelector("[data-trainer-reps]");
-      const weightInput = trainer.querySelector("[data-trainer-weight]");
-      const notesInput = trainer.querySelector("[data-trainer-notes]");
-      const addButton = trainer.querySelector("[data-trainer-add]");
-      const saveButton = trainer.querySelector("[data-trainer-save]");
-      const clearButton = trainer.querySelector("[data-trainer-clear]");
-      const logList = trainer.querySelector("[data-trainer-log]");
-      const logEmpty = trainer.querySelector("[data-trainer-log-empty]");
-      const calendarGrid = trainer.querySelector("[data-trainer-calendar]");
-      const calendarTitle = trainer.querySelector("[data-trainer-calendar-title]");
-      const periodEl = trainer.querySelector("[data-trainer-period]");
-      const filterMovementSelect = trainer.querySelector("[data-trainer-filter-movement]");
-      const filterMetricSelect = trainer.querySelector("[data-trainer-filter-metric]");
-      const chartContainer = trainer.querySelector("[data-trainer-chart]");
-      const trendSubtitleEl = trainer.querySelector("[data-trainer-trend-subtitle]");
-      const totalSetsEl = trainer.querySelector("[data-trainer-total-sets]");
-      const totalLoadEl = trainer.querySelector("[data-trainer-total-load]");
-      const focusMixEl = trainer.querySelector("[data-trainer-focus-mix]");
-      const statusEl = trainer.querySelector("[data-trainer-status]");
-      const monthButtons = trainer.querySelectorAll("[data-trainer-month]");
+      if (
+        !dateInput ||
+        !focusSelect ||
+        !movementSelect ||
+        !setsInput ||
+        !repsInput ||
+        !weightInput ||
+        !notesInput ||
+        !addButton ||
+        !saveButton ||
+        !clearButton ||
+        !logList ||
+        !logEmpty ||
+        !calendarGrid ||
+        !calendarTitle ||
+        !periodEl ||
+        !filterMovementSelect ||
+        !filterMetricSelect ||
+        !chartContainer ||
+        !trendSubtitleEl ||
+        !totalSetsEl ||
+        !totalLoadEl ||
+        !focusMixEl ||
+        !statusEl
+      ) {
+        return;
+      }
 
       let statusTimeout = null;
+      const today = new Date();
 
       const state = {
         entries: new Map(),
         draft: [],
-        selectedDate: todayISO,
+        selectedDate: formatISO(today),
         monthCursor: new Date(today.getFullYear(), today.getMonth(), 1)
+      };
+
+      dateInput.value = state.selectedDate;
+
+      const formatters = {
+        month: new Intl.DateTimeFormat('ja-JP', { month: 'long', year: 'numeric' })
       };
 
       function formatISO(date) {
@@ -602,30 +506,27 @@
       }
 
       function parseISO(iso) {
-        const [year, month, day] = iso.split("-").map(Number);
-        return new Date(year, month - 1, day);
+        const [y, m, d] = iso.split('-').map(Number);
+        return new Date(y, m - 1, d);
       }
 
-      function setStatus(message, tone = "neutral") {
-        if (!statusEl) {
-          return;
-        }
+      function setStatus(message, tone = 'neutral') {
         statusEl.textContent = message;
-        statusEl.setAttribute("data-tone", tone);
+        statusEl.setAttribute('data-tone', tone);
         if (statusTimeout) {
           clearTimeout(statusTimeout);
         }
         statusTimeout = window.setTimeout(() => {
-          statusEl.textContent = "Session idle";
-          statusEl.setAttribute("data-tone", "neutral");
+          statusEl.textContent = 'Session idle';
+          statusEl.setAttribute('data-tone', 'neutral');
         }, 3200);
       }
 
       function setMovementOptions(focus) {
         const movements = movementLibrary[focus] || [];
-        movementSelect.innerHTML = "";
+        movementSelect.innerHTML = '';
         movements.forEach((movement, index) => {
-          const option = document.createElement("option");
+          const option = document.createElement('option');
           option.value = movement;
           option.textContent = movement;
           if (index === 0) {
@@ -642,57 +543,47 @@
       function getAllSavedEntries() {
         const collection = [];
         state.entries.forEach((entries, iso) => {
-          entries.forEach((entry) => {
-            collection.push({ iso, ...entry });
-          });
+          entries.forEach((entry) => collection.push({ iso, ...entry }));
         });
         return collection;
       }
 
       function populateMovementFilter() {
-        const previous = filterMovementSelect.value || "all";
+        const previous = filterMovementSelect.value || 'all';
         const movements = new Set();
-        getAllSavedEntries().forEach((entry) => {
-          movements.add(entry.movement);
-        });
-        const sortedMovements = Array.from(movements).sort((a, b) => a.localeCompare(b));
-
-        filterMovementSelect.innerHTML = "";
-
-        const allOption = document.createElement("option");
-        allOption.value = "all";
-        allOption.textContent = "All Movements";
+        getAllSavedEntries().forEach((entry) => movements.add(entry.movement));
+        const sorted = Array.from(movements).sort((a, b) => a.localeCompare(b));
+        filterMovementSelect.innerHTML = '';
+        const allOption = document.createElement('option');
+        allOption.value = 'all';
+        allOption.textContent = 'All Movements';
         filterMovementSelect.append(allOption);
-
-        sortedMovements.forEach((movement) => {
-          const option = document.createElement("option");
+        sorted.forEach((movement) => {
+          const option = document.createElement('option');
           option.value = movement;
           option.textContent = movement;
           filterMovementSelect.append(option);
         });
-
-        if (previous !== "all" && !movements.has(previous)) {
-          filterMovementSelect.value = "all";
+        if (previous !== 'all' && !movements.has(previous)) {
+          filterMovementSelect.value = 'all';
         } else {
           filterMovementSelect.value = previous;
         }
       }
 
       function renderLog() {
-        logList.innerHTML = "";
+        logList.innerHTML = '';
         const saved = getSavedEntriesFor(state.selectedDate);
         const pending = state.draft;
         if (!saved.length && !pending.length) {
           logEmpty.hidden = false;
           return;
         }
-
         logEmpty.hidden = true;
         const fragment = document.createDocumentFragment();
-
         const appendEntry = (entry, statusLabel) => {
-          const item = document.createElement("li");
-          item.className = "trainer-log__item";
+          const item = document.createElement('li');
+          item.className = 'trainer-log__item';
           item.innerHTML = `
             <div class="trainer-log__meta">
               <span>${statusLabel}</span>
@@ -700,195 +591,129 @@
               <span>${entry.sets}×${entry.reps} @ ${entry.weight}kg</span>
             </div>
             <p class="trainer-log__title">${entry.movement}</p>
-            <p class="trainer-log__notes">${entry.notes ? entry.notes : "No notes provided."}</p>
+            <p class="trainer-log__notes">${entry.notes ? entry.notes : 'No notes provided.'}</p>
           `;
           fragment.append(item);
         };
-
-        saved.forEach((entry) => appendEntry(entry, "Saved"));
-        pending.forEach((entry) => appendEntry(entry, "Pending"));
-
+        saved.forEach((entry) => appendEntry(entry, 'Saved'));
+        pending.forEach((entry) => appendEntry(entry, 'Pending'));
         logList.append(fragment);
       }
 
       function renderCalendar() {
-        calendarGrid.innerHTML = "";
+        calendarGrid.innerHTML = '';
         const year = state.monthCursor.getFullYear();
         const month = state.monthCursor.getMonth();
         const firstOfMonth = new Date(year, month, 1);
         const startingDay = firstOfMonth.getDay();
         const startDate = new Date(year, month, 1 - startingDay);
         const totalCells = 42;
-
-        const formatter = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
-        calendarTitle.textContent = formatter.format(firstOfMonth);
-
+        calendarTitle.textContent = formatters.month.format(firstOfMonth);
         for (let i = 0; i < totalCells; i++) {
           const current = new Date(startDate);
           current.setDate(startDate.getDate() + i);
           const iso = formatISO(current);
-          const dayButton = document.createElement("button");
-          dayButton.type = "button";
-          dayButton.className = "trainer-day";
+          const dayButton = document.createElement('button');
+          dayButton.type = 'button';
+          dayButton.className = 'trainer-day';
           dayButton.textContent = current.getDate().toString();
-
           if (current.getMonth() !== month) {
-            dayButton.classList.add("is-other");
+            dayButton.classList.add('is-other');
           }
-
-          if (iso === todayISO) {
-            dayButton.classList.add("is-today");
+          if (iso === state.selectedDate) {
+            dayButton.classList.add('is-selected');
           }
-
           const saved = getSavedEntriesFor(iso);
           if (saved.length) {
-            dayButton.dataset.hasSession = "true";
+            dayButton.dataset.hasSession = 'true';
             const focusCount = saved.reduce((acc, entry) => {
               acc[entry.focus] = (acc[entry.focus] || 0) + 1;
               return acc;
             }, {});
-            const dominantFocus = Object.entries(focusCount).sort((a, b) => b[1] - a[1])[0][0];
-            dayButton.dataset.focus = dominantFocus;
-
-            const badge = document.createElement("span");
-            badge.className = "trainer-day__badge";
-            badge.textContent = focusBadges[dominantFocus] || focusLabels[dominantFocus].slice(0, 2).toUpperCase();
-            dayButton.title = `Focus: ${focusLabels[dominantFocus]}`;
+            const dominant = Object.entries(focusCount).sort((a, b) => b[1] - a[1])[0][0];
+            dayButton.dataset.focus = dominant;
+            const badge = document.createElement('span');
+            badge.className = 'trainer-day__badge';
+            badge.textContent = focusBadges[dominant] || dominant.toUpperCase();
             dayButton.append(badge);
           }
-
-          if (iso === state.selectedDate) {
-            dayButton.classList.add("is-selected");
-          }
-
-          dayButton.addEventListener("click", () => {
+          dayButton.addEventListener('click', () => {
             state.selectedDate = iso;
             state.draft = [];
             dateInput.value = iso;
-            const selectedDate = parseISO(iso);
-            state.monthCursor = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
-            setStatus(`Loaded ${iso}`, "neutral");
+            setStatus(`${iso} をロードしました`, 'neutral');
             renderAll();
           });
-
           calendarGrid.append(dayButton);
         }
       }
 
       function renderChart() {
-        if (!chartContainer) {
-          return;
-        }
-        chartContainer.innerHTML = "";
-
-        const metric = filterMetricSelect.value || "volume";
-        const selectedMovement = filterMovementSelect.value || "all";
-        const dataset = Array.from(state.entries.entries())
-          .map(([iso, entries]) => {
-            const filtered = selectedMovement === "all" ? entries : entries.filter((entry) => entry.movement === selectedMovement);
-            if (!filtered.length) {
-              return null;
-            }
-            const value = (() => {
-              if (metric === "volume") {
-                return filtered.reduce((total, entry) => total + entry.sets * entry.reps * entry.weight, 0);
-              }
-              if (metric === "reps") {
-                return filtered.reduce((total, entry) => total + entry.sets * entry.reps, 0);
-              }
-              const weighted = filtered.filter((entry) => entry.weight > 0);
-              if (!weighted.length) {
-                return 0;
-              }
-              const totalWeight = weighted.reduce((total, entry) => total + entry.weight, 0);
-              return totalWeight / weighted.length;
-            })();
-            const label = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(parseISO(iso));
-            return { iso, value, label };
-          })
-          .filter(Boolean)
-          .sort((a, b) => (a.iso > b.iso ? 1 : -1));
-
-        const movementLabel = selectedMovement === "all" ? "All movements" : selectedMovement;
-        trendSubtitleEl.textContent = `${movementLabel} · ${metricLabels[metric]}`;
-
-        if (!dataset.length) {
-          const empty = document.createElement("p");
-          empty.className = "trainer-chart__empty";
-          empty.textContent = "No saved sessions match this filter yet.";
+        chartContainer.innerHTML = '';
+        const metric = filterMetricSelect.value;
+        const movement = filterMovementSelect.value;
+        const entries = getAllSavedEntries().filter((entry) => movement === 'all' || entry.movement === movement);
+        if (!entries.length) {
+          const empty = document.createElement('p');
+          empty.className = 'trainer-chart__empty';
+          empty.textContent = 'ログが足りません';
           chartContainer.append(empty);
           return;
         }
-
-        const svgNS = "http://www.w3.org/2000/svg";
-        const svgHeight = 160;
-        const svgWidth = 560;
-        const paddingX = 36;
-        const drawableWidth = svgWidth - paddingX * 2;
-        const step = dataset.length > 1 ? drawableWidth / (dataset.length - 1) : 0;
-        const minValue = Math.min(...dataset.map((d) => d.value));
-        const maxValue = Math.max(...dataset.map((d) => d.value));
-        const range = maxValue - minValue || 1;
-
-        const singlePoint = dataset.length === 1;
-        const points = dataset.map((point, index) => {
-          const x = singlePoint ? svgWidth / 2 : paddingX + index * step;
-          const normalized = singlePoint ? 0.5 : (point.value - minValue) / range;
-          const y = svgHeight - normalized * (svgHeight - 40) - 10;
-          return { x, y, label: point.label, iso: point.iso, value: point.value };
-        });
-
-        const svg = document.createElementNS(svgNS, "svg");
-        svg.setAttribute("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
-        svg.setAttribute("preserveAspectRatio", "none");
-        svg.setAttribute("width", "100%");
-        svg.setAttribute("height", String(svgHeight));
-
-        const axis = document.createElementNS(svgNS, "line");
-        axis.setAttribute("x1", String(paddingX));
-        axis.setAttribute("y1", String(svgHeight - 20));
-        axis.setAttribute("x2", String(svgWidth - paddingX));
-        axis.setAttribute("y2", String(svgHeight - 20));
-        axis.setAttribute("stroke", "rgba(95, 227, 176, 0.18)");
-        axis.setAttribute("stroke-width", "2");
-        svg.append(axis);
-
-        const path = document.createElementNS(svgNS, "path");
-        const d = points
-          .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
-          .join(" ");
-        path.setAttribute("d", d);
-        path.setAttribute("fill", "none");
-        path.setAttribute("stroke", "rgba(149, 227, 176, 0.8)");
-        path.setAttribute("stroke-width", "3");
-        path.setAttribute("stroke-linecap", "round");
-        path.setAttribute("stroke-linejoin", "round");
+        const grouped = entries.reduce((acc, entry) => {
+          acc[entry.iso] = acc[entry.iso] || [];
+          acc[entry.iso].push(entry);
+          return acc;
+        }, {});
+        const points = Object.entries(grouped)
+          .map(([date, items]) => {
+            const value = items.reduce((total, item) => {
+              if (metric === 'volume') {
+                return total + item.sets * item.reps * item.weight;
+              }
+              if (metric === 'reps') {
+                return total + item.sets * item.reps;
+              }
+              return total + item.weight;
+            }, 0);
+            return { date, value: metric === 'weight' ? value / items.length : value };
+          })
+          .sort((a, b) => a.date.localeCompare(b.date));
+        trendSubtitleEl.textContent = metricLabels[metric];
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(svgNS, 'svg');
+        const width = 320;
+        const height = 160;
+        svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+        svg.setAttribute('role', 'img');
+        svg.setAttribute('aria-label', 'Training trend chart');
+        const maxVal = Math.max(...points.map((point) => point.value));
+        const minVal = Math.min(...points.map((point) => point.value));
+        const range = maxVal - minVal || 1;
+        const pathData = points
+          .map((point, index) => {
+            const x = (index / (points.length - 1 || 1)) * (width - 20) + 10;
+            const y = height - ((point.value - minVal) / range) * (height - 20) - 10;
+            return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+          })
+          .join(' ');
+        const path = document.createElementNS(svgNS, 'path');
+        path.setAttribute('d', pathData);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', '#a868ff');
+        path.setAttribute('stroke-width', '2.5');
+        path.setAttribute('stroke-linecap', 'round');
         svg.append(path);
-
-        points.forEach((point) => {
-          const circle = document.createElementNS(svgNS, "circle");
-          circle.setAttribute("cx", String(point.x));
-          circle.setAttribute("cy", String(point.y));
-          circle.setAttribute("r", "5");
-          circle.setAttribute("fill", "rgba(46, 204, 113, 0.9)");
-
-          const title = document.createElementNS(svgNS, "title");
-          const formattedValue = metric === "weight" ? point.value.toFixed(1) : Math.round(point.value);
-          title.textContent = `${point.label}: ${formattedValue}`;
-          circle.append(title);
-
+        points.forEach((point, index) => {
+          const x = (index / (points.length - 1 || 1)) * (width - 20) + 10;
+          const y = height - ((point.value - minVal) / range) * (height - 20) - 10;
+          const circle = document.createElementNS(svgNS, 'circle');
+          circle.setAttribute('cx', x);
+          circle.setAttribute('cy', y);
+          circle.setAttribute('r', '4');
+          circle.setAttribute('fill', '#7a8cff');
           svg.append(circle);
-
-          const text = document.createElementNS(svgNS, "text");
-          text.setAttribute("x", String(point.x));
-          text.setAttribute("y", String(svgHeight - 6));
-          text.setAttribute("font-size", "10");
-          text.setAttribute("fill", "rgba(176, 220, 198, 0.7)");
-          text.setAttribute("text-anchor", "middle");
-          text.textContent = point.label;
-          svg.append(text);
         });
-
         chartContainer.append(svg);
       }
 
@@ -905,15 +730,14 @@
         });
         totalSetsEl.textContent = totalSets;
         totalLoadEl.textContent = `${Math.round(totalLoad)} kg`;
-        if (Object.keys(focusCounter).length === 0) {
-          focusMixEl.textContent = "—";
-        } else {
-          const mix = Object.entries(focusCounter)
-            .sort((a, b) => b[1] - a[1])
-            .map(([focus, count]) => `${focusLabels[focus]} (${count})`)
-            .join(" · ");
-          focusMixEl.textContent = mix;
+        if (!Object.keys(focusCounter).length) {
+          focusMixEl.textContent = '—';
+          return;
         }
+        focusMixEl.textContent = Object.entries(focusCounter)
+          .sort((a, b) => b[1] - a[1])
+          .map(([focus, count]) => `${focusLabels[focus]} (${count})`)
+          .join(' · ');
       }
 
       function renderPeriod() {
@@ -924,8 +748,8 @@
         start.setDate(selected.getDate() - diffToMonday);
         const end = new Date(start);
         end.setDate(start.getDate() + 6);
-        const formatter = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" });
-        periodEl.textContent = `Week of ${formatter.format(start)} – ${formatter.format(end)}`;
+        const formatter = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' });
+        periodEl.textContent = `${formatter.format(start)} – ${formatter.format(end)}`;
       }
 
       function renderAll() {
@@ -938,92 +762,77 @@
       }
 
       function addEntry() {
-        const date = state.selectedDate;
-        const focus = focusSelect.value;
         const movement = movementSelect.value;
-        const sets = Number.parseInt(setsInput.value, 10);
-        const reps = Number.parseInt(repsInput.value, 10);
-        const weight = Number.parseFloat(weightInput.value);
-        const notes = notesInput.value.trim();
-
         if (!movement) {
-          setStatus("Select a movement to log.", "warn");
+          setStatus('ムーブメントを選択してください', 'warn');
           return;
         }
-
+        const focus = focusSelect.value;
+        const sets = Number(setsInput.value) || 1;
+        const reps = Number(repsInput.value) || 1;
+        const weight = Number(weightInput.value) || 0;
+        const notes = notesInput.value.trim();
         state.draft.push({
-          date,
+          date: state.selectedDate,
           focus,
           movement,
-          sets: Number.isFinite(sets) ? sets : 1,
-          reps: Number.isFinite(reps) ? reps : 1,
-          weight: Number.isFinite(weight) ? weight : 0,
+          sets,
+          reps,
+          weight,
           notes
         });
-        notesInput.value = "";
-        setStatus(`Added ${movement} to ${date}.`, "success");
+        notesInput.value = '';
+        setStatus(`${movement} を追加`, 'success');
         renderLog();
       }
 
       function commitDay() {
-        if (state.draft.length === 0) {
-          setStatus("Add at least one movement before committing.", "warn");
+        if (!state.draft.length) {
+          setStatus('ムーブメントを追加してください', 'warn');
           return;
         }
         const current = getSavedEntriesFor(state.selectedDate);
         state.entries.set(state.selectedDate, [...current, ...state.draft]);
         state.draft = [];
-        setStatus(`Session committed for ${state.selectedDate}.`, "success");
+        setStatus(`${state.selectedDate} を保存`, 'success');
         renderAll();
       }
 
       function clearComposer() {
         state.draft = [];
-        notesInput.value = "";
-        setStatus("Composer reset.", "neutral");
+        notesInput.value = '';
+        setsInput.value = '3';
+        repsInput.value = '8';
+        weightInput.value = '60';
         setMovementOptions(focusSelect.value);
-        setsInput.value = "3";
-        repsInput.value = "8";
-        weightInput.value = "60";
         renderLog();
+        setStatus('リセット完了', 'neutral');
       }
 
       function shiftMonth(direction) {
-        const delta = direction === "next" ? 1 : -1;
+        const delta = direction === 'next' ? 1 : -1;
         state.monthCursor.setMonth(state.monthCursor.getMonth() + delta);
         renderCalendar();
       }
 
-      dateInput.value = todayISO;
-
-      dateInput.addEventListener("change", () => {
-        const next = dateInput.value || todayISO;
+      focusSelect.addEventListener('change', () => setMovementOptions(focusSelect.value));
+      dateInput.addEventListener('change', () => {
+        const next = dateInput.value || formatISO(new Date());
         state.selectedDate = next;
         state.draft = [];
-        const dateObj = parseISO(next);
-        state.monthCursor = new Date(dateObj.getFullYear(), dateObj.getMonth(), 1);
-        setStatus(`Loaded ${next}.`, "neutral");
+        state.monthCursor = new Date(Number(next.slice(0, 4)), Number(next.slice(5, 7)) - 1, 1);
         renderAll();
       });
-
-      focusSelect.addEventListener("change", () => {
-        setMovementOptions(focusSelect.value);
-      });
-
-      addButton.addEventListener("click", addEntry);
-      saveButton.addEventListener("click", commitDay);
-      clearButton.addEventListener("click", clearComposer);
-
+      addButton.addEventListener('click', addEntry);
+      saveButton.addEventListener('click', commitDay);
+      clearButton.addEventListener('click', clearComposer);
       monthButtons.forEach((button) => {
-        button.addEventListener("click", () => shiftMonth(button.dataset.trainerMonth));
+        button.addEventListener('click', () => shiftMonth(button.dataset.trainerMonth));
       });
-
-      filterMovementSelect.addEventListener("change", renderChart);
-      filterMetricSelect.addEventListener("change", renderChart);
+      filterMovementSelect.addEventListener('change', renderChart);
+      filterMetricSelect.addEventListener('change', renderChart);
 
       setMovementOptions(focusSelect.value);
-      filterMovementSelect.value = "all";
-      filterMetricSelect.value = "volume";
       renderAll();
     })();
   </script>
