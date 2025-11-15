@@ -12,6 +12,25 @@
   <meta name="color-scheme" content="light only">
 </head>
 <body>
+  <!-- Page loader (Uiverse grumpy-turtle-41 inspired) -->
+  <div class="page-loader is-on" data-page-loader role="status" aria-live="polite" aria-label="Loading">
+    <div class="gt-spinner" aria-hidden="true">
+      <span class="gt-dot" style="--i:0"></span>
+      <span class="gt-dot" style="--i:1"></span>
+      <span class="gt-dot" style="--i:2"></span>
+      <span class="gt-dot" style="--i:3"></span>
+      <span class="gt-dot" style="--i:4"></span>
+      <span class="gt-dot" style="--i:5"></span>
+      <span class="gt-dot" style="--i:6"></span>
+      <span class="gt-dot" style="--i:7"></span>
+      <span class="gt-dot" style="--i:8"></span>
+      <span class="gt-dot" style="--i:9"></span>
+      <span class="gt-dot" style="--i:10"></span>
+      <span class="gt-dot" style="--i:11"></span>
+    </div>
+    <p class="page-loader__label">Loading</p>
+  </div>
+
   <!-- background -->
   <div class="bg-swirl" aria-hidden="true">
     <div class="bg-swirl__ring bg-swirl__ring--one"></div>
@@ -55,7 +74,7 @@
             <strong>18</strong>
           </div>
         </div>
-        <a class="profile-card__cta" href="#contact" aria-label="Request collaboration">Request Collaboration</a>
+        <a class="profile-card__cta qc-btn" href="#contact" aria-label="Request collaboration">Request Collaboration</a>
       </div>
 
       <!-- Scroll-spy nav with animated indicator -->
@@ -68,7 +87,7 @@
       </nav>
 
       <!-- LinkedIn card (iframe is blocked by LinkedIn; we use an accessible follow card) -->
-      <a class="embed-card embed-card--linkedin" href="https://www.linkedin.com/in/tomohisa-sasaki" target="_blank" rel="noreferrer">
+      <a class="embed-card embed-card--linkedin" href="https://www.linkedin.com/in/tomohisa-sasaki" target="_blank" rel="noreferrer" data-tooltip="Open LinkedIn profile">
         <div class="embed-card__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
             <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V24h-4V8zm7.5 0h3.8v2.2h.05c.53-1 1.82-2.2 3.74-2.2 4 0 4.74 2.6 4.74 5.9V24h-4v-7.6c0-1.8-.03-4.1-2.5-4.1-2.5 0-2.9 1.9-2.9 4v7.7h-4V8z"></path>
@@ -82,7 +101,13 @@
         <span class="embed-card__status">Follow</span>
       </a>
 
-      <a class="floating-cta" href="#research">See Latest Research</a>
+      <!-- Social buttons (Uiverse smooth-crab-52 vibe) -->
+      <div class="social-buttons" role="group" aria-label="Social profiles">
+        <a class="social-btn social-btn--x" href="https://twitter.com/" target="_blank" rel="noreferrer" aria-label="Open X/Twitter">X</a>
+        <a class="social-btn social-btn--gh" href="https://github.com/" target="_blank" rel="noreferrer" aria-label="Open GitHub">GitHub</a>
+      </div>
+
+      <a class="floating-cta qc-btn qc-btn--ghost" href="#research">See Latest Research</a>
     </aside>
 
     <!-- Main content -->
@@ -173,13 +198,18 @@
           <h2 class="section__title">Products</h2>
           <p class="section__lead">A decision‑support tool for Finance and a full‑stack prototype for strength training.</p>
         </header>
-        <div class="product-chips" role="list">
-          <span class="product-chip product-chip--finance" role="listitem">Finance Intelligence</span>
-          <span class="product-chip product-chip--health" role="listitem">Healthcare</span>
-          <span class="product-chip product-chip--muscle" role="listitem">Muscle Log</span>
+
+        <!-- Uiverse-inspired chip tabs -->
+        <div class="product-chips" role="tablist" aria-label="Filter products">
+          <button class="product-chip is-selected" role="tab" aria-selected="true" data-filter="all">All</button>
+          <button class="product-chip product-chip--finance" role="tab" aria-selected="false" data-filter="finance">Finance</button>
+          <button class="product-chip product-chip--muscle" role="tab" aria-selected="false" data-filter="muscle">Muscle</button>
+          <button class="product-chip product-chip--health" role="tab" aria-selected="false" data-filter="health">Healthcare</button>
         </div>
+        <div class="visually-hidden" aria-live="polite" data-products-status>All products shown</div>
+
         <div class="product-grid">
-          <article class="product-card product-card--finance">
+          <article class="product-card product-card--finance" data-product="finance">
             <div class="product-card__header">
               <p class="product-card__eyebrow">Finance Signal Lab</p>
               <h3>Alpha Canvas</h3>
@@ -194,7 +224,7 @@
             </ul>
           </article>
 
-          <article class="product-card product-card--muscle">
+          <article class="product-card product-card--muscle" data-product="muscle">
             <div class="product-card__header">
               <p class="product-card__eyebrow">Embodied Intelligence</p>
               <h3>Muscle Log Companion</h3>
@@ -341,7 +371,7 @@
             <label class="contact-label" for="contact-message">Message</label>
             <textarea class="contact-input contact-input--textarea" id="contact-message" name="message" rows="5" placeholder="Collaboration ideas or questions are welcome."></textarea>
 
-            <button type="submit" class="contact-submit">Send</button>
+            <button type="submit" class="contact-submit qc-btn">Send</button>
           </form>
         </div>
       </section>
@@ -349,13 +379,25 @@
   </div>
 
   <script>
+    // --- Page Loader (grumpy-turtle-41 inspired) ---
+    (function(){
+      const loader = document.querySelector('[data-page-loader]');
+      function hide(){ if(!loader) return; loader.classList.add('is-off'); loader.classList.remove('is-on'); }
+      function show(){ if(!loader) return; loader.classList.add('is-on'); loader.classList.remove('is-off'); }
+      window.PageLoader = { show, hide };
+      // Hide once content is interactive
+      if(document.readyState === 'complete' || document.readyState === 'interactive'){
+        setTimeout(hide, 300);
+      } else {
+        window.addEventListener('DOMContentLoaded', () => setTimeout(hide, 300));
+      }
+    })();
+
     // --- Animated scroll-spy + moving indicator + gentle float for left tabs ---
     (function () {
       const nav = document.querySelector('.profile-nav');
       const navButtons = nav.querySelectorAll('[data-nav-target]');
-      // set stagger index for float animation
       navButtons.forEach((btn, i) => btn.style.setProperty('--i', i));
-      // create indicator
       const indicator = nav.querySelector('.profile-nav__indicator');
       function moveIndicator(targetBtn) {
         const active = targetBtn || nav.querySelector('.profile-nav__item.is-active') || navButtons[0];
@@ -365,7 +407,6 @@
         nav.style.setProperty('--nav-indicator-top', top + 'px');
         nav.style.setProperty('--nav-indicator-height', height + 'px');
       }
-      // click-to-scroll & update active
       navButtons.forEach((button) => {
         const targetSelector = button.dataset.navTarget;
         const targetSection = document.querySelector(targetSelector);
@@ -379,7 +420,6 @@
       });
       moveIndicator();
 
-      // observe sections while scrolling
       const pairs = Array.from(navButtons).map((button) => ({
         button,
         target: document.querySelector(button.dataset.navTarget)
@@ -404,7 +444,6 @@
       );
       pairs.forEach(({ target }) => target && observer.observe(target));
 
-      // subtle parallax/magnet effect on pointer move (reduced on prefers-reduced-motion)
       let raf = null;
       nav.addEventListener('mousemove', (e) => {
         if (raf) cancelAnimationFrame(raf);
@@ -414,9 +453,7 @@
           nav.style.setProperty('--nav-mouse-y', y.toFixed(4));
         });
       });
-      nav.addEventListener('mouseleave', () => {
-        nav.style.removeProperty('--nav-mouse-y');
-      });
+      nav.addEventListener('mouseleave', () => { nav.style.removeProperty('--nav-mouse-y'); });
       window.addEventListener('resize', () => moveIndicator());
     })();
 
@@ -444,7 +481,91 @@
       });
     })();
 
-    // --- Trainer module (ported from your prototype, copy intact) ---
+    // --- Products filter & focus view (Uiverse-inspired chips) ---
+    (function(){
+      const grid = document.querySelector('.product-grid');
+      const cards = Array.from(document.querySelectorAll('.product-card'));
+      const chips = Array.from(document.querySelectorAll('.product-chip[data-filter]'));
+      const status = document.querySelector('[data-products-status]');
+      if(!grid || !cards.length || !chips.length) return;
+
+      function selectChip(kind){
+        chips.forEach(chip=>{
+          const on = chip.dataset.filter === kind || (kind==='all' && chip.dataset.filter==='all');
+          chip.classList.toggle('is-selected', on);
+          chip.setAttribute('aria-selected', String(on));
+        });
+      }
+      function applyFilter(kind){
+        let shown = 0;
+        grid.classList.toggle('is-focused', kind !== 'all');
+        cards.forEach(card=>{
+          const show = kind === 'all' || card.dataset.product === kind;
+          card.classList.toggle('is-hidden', !show);
+          if(show) shown++;
+        });
+        if(status){
+          status.textContent = shown ? `${shown} product${shown>1?'s':''} shown` : 'No products in this category yet';
+        }
+      }
+      chips.forEach(chip=>{
+        chip.addEventListener('click', ()=>{
+          const kind = chip.dataset.filter;
+          selectChip(kind);
+          applyFilter(kind);
+        });
+      });
+      cards.forEach(card=>{
+        card.addEventListener('click', ()=>{
+          const kind = card.dataset.product || 'all';
+          selectChip(kind);
+          applyFilter(kind);
+          grid.scrollIntoView({behavior:'smooth', block:'start'});
+        });
+      });
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'Escape'){
+          selectChip('all'); applyFilter('all');
+        }
+      });
+    })();
+
+    // --- Timeline micro-animations per item ---
+    (function(){
+      const items = document.querySelectorAll('.timeline__item');
+      if(!items.length || !('IntersectionObserver' in window)) return;
+      const obs = new IntersectionObserver((entries)=>{
+        entries.forEach((entry)=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('is-in');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {threshold: 0.5});
+      items.forEach((it, i)=>{ it.style.setProperty('--ti', i); obs.observe(it); });
+    })();
+
+    // --- Contact button magnetic hover (quick-chicken-50 vibe) ---
+    (function(){
+      const btn = document.querySelector('.contact-submit');
+      if(!btn) return;
+      let raf = null;
+      btn.addEventListener('mousemove', (e)=>{
+        const r = btn.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        if(raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(()=> {
+          btn.style.setProperty('--mx', x.toFixed(3));
+          btn.style.setProperty('--my', y.toFixed(3));
+        });
+      });
+      ['mouseleave','blur'].forEach(ev=> btn.addEventListener(ev, ()=> {
+        btn.style.removeProperty('--mx'); btn.style.removeProperty('--my');
+      }));
+    })();
+
+    // --- Trainer module (kept) + show mini loader on save ---
     (function () {
       const trainer = document.querySelector('[data-trainer]');
       if (!trainer) return;
@@ -527,14 +648,8 @@
         month: new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' })
       };
 
-      function formatISO(date) {
-        return date.toISOString().slice(0, 10);
-      }
-
-      function parseISO(iso) {
-        const [y, m, d] = iso.split('-').map(Number);
-        return new Date(y, m - 1, d);
-      }
+      function formatISO(date) { return date.toISOString().slice(0, 10); }
+      function parseISO(iso) { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d); }
 
       function setStatus(message, tone = 'neutral') {
         statusEl.textContent = message;
@@ -558,15 +673,10 @@
         });
       }
 
-      function getSavedEntriesFor(dateISO) {
-        return state.entries.get(dateISO) || [];
-      }
-
+      function getSavedEntriesFor(dateISO) { return state.entries.get(dateISO) || []; }
       function getAllSavedEntries() {
         const collection = [];
-        state.entries.forEach((entries, iso) => {
-          entries.forEach((entry) => collection.push({ iso, ...entry }));
-        });
+        state.entries.forEach((entries, iso) => { entries.forEach((entry) => collection.push({ iso, ...entry })); });
         return collection;
       }
 
@@ -577,30 +687,16 @@
         const sorted = Array.from(movements).sort((a, b) => a.localeCompare(b));
         filterMovementSelect.innerHTML = '';
         const allOption = document.createElement('option');
-        allOption.value = 'all';
-        allOption.textContent = 'All Movements';
-        filterMovementSelect.append(allOption);
-        sorted.forEach((movement) => {
-          const option = document.createElement('option');
-          option.value = movement;
-          option.textContent = movement;
-          filterMovementSelect.append(option);
-        });
-        if (previous !== 'all' && !movements.has(previous)) {
-          filterMovementSelect.value = 'all';
-        } else {
-          filterMovementSelect.value = previous;
-        }
+        allOption.value = 'all'; allOption.textContent = 'All Movements'; filterMovementSelect.append(allOption);
+        sorted.forEach((movement) => { const option = document.createElement('option'); option.value = movement; option.textContent = movement; filterMovementSelect.append(option); });
+        if (previous !== 'all' && !movements.has(previous)) { filterMovementSelect.value = 'all'; } else { filterMovementSelect.value = previous; }
       }
 
       function renderLog() {
         logList.innerHTML = '';
         const saved = getSavedEntriesFor(state.selectedDate);
         const pending = state.draft;
-        if (!saved.length && !pending.length) {
-          logEmpty.hidden = false;
-          return;
-        }
+        if (!saved.length && !pending.length) { logEmpty.hidden = false; return; }
         logEmpty.hidden = true;
         const fragment = document.createDocumentFragment();
         const appendEntry = (entry, statusLabel) => {
@@ -644,9 +740,7 @@
           const saved = getSavedEntriesFor(iso);
           if (saved.length) {
             dayButton.dataset.hasSession = 'true';
-            const focusCount = saved.reduce((acc, entry) => {
-              acc[entry.focus] = (acc[entry.focus] || 0) + 1; return acc;
-            }, {});
+            const focusCount = saved.reduce((acc, entry) => { acc[entry.focus] = (acc[entry.focus] || 0) + 1; return acc; }, {});
             const dominant = Object.entries(focusCount).sort((a, b) => b[1] - a[1])[0][0];
             dayButton.dataset.focus = dominant;
             const badge = document.createElement('span');
@@ -676,10 +770,7 @@
           chartContainer.append(empty);
           return;
         }
-        const grouped = entries.reduce((acc, entry) => {
-          acc[entry.iso] = acc[entry.iso] || [];
-          acc[entry.iso].push(entry); return acc;
-        }, {});
+        const grouped = entries.reduce((acc, entry) => { acc[entry.iso] = acc[entry.iso] || []; acc[entry.iso].push(entry); return acc; }, {});
         const points = Object.entries(grouped)
           .map(([date, items]) => {
             const value = items.reduce((total, item) => {
@@ -739,9 +830,7 @@
         });
         totalSetsEl.textContent = totalSets;
         totalLoadEl.textContent = Math.round(totalLoad) + ' kg';
-        if (!Object.keys(focusCounter).length) {
-          focusMixEl.textContent = '—'; return;
-        }
+        if (!Object.keys(focusCounter).length) { focusMixEl.textContent = '—'; return; }
         focusMixEl.textContent = Object.entries(focusCounter)
           .sort((a, b) => b[1] - a[1])
           .map(([focus, count]) => `${focusLabels[focus]} (${count})`)
@@ -760,14 +849,7 @@
         periodEl.textContent = `${formatter.format(start)} – ${formatter.format(end)}`;
       }
 
-      function renderAll() {
-        renderLog();
-        renderCalendar();
-        populateMovementFilter();
-        renderChart();
-        renderSummary();
-        renderPeriod();
-      }
+      function renderAll() { renderLog(); renderCalendar(); populateMovementFilter(); renderChart(); renderSummary(); renderPeriod(); }
 
       function addEntry() {
         const movement = movementSelect.value;
@@ -779,17 +861,20 @@
         const notes = (notesInput.value || '').trim();
         state.draft.push({ date: state.selectedDate, focus, movement, sets, reps, weight, notes });
         notesInput.value = '';
-        setStatus(`${movement} added`, 'success');
-        renderLog();
+        setStatus(`${movement} added`, 'success'); renderLog();
       }
 
       function commitDay() {
         if (!state.draft.length) { setStatus('Add at least one movement', 'warn'); return; }
-        const current = getSavedEntriesFor(state.selectedDate);
-        state.entries.set(state.selectedDate, [...current, ...state.draft]);
-        state.draft = [];
-        setStatus(`${state.selectedDate} saved`, 'success');
-        renderAll();
+        window.PageLoader && window.PageLoader.show();
+        setTimeout(()=>{
+          const current = getSavedEntriesFor(state.selectedDate);
+          state.entries.set(state.selectedDate, [...current, ...state.draft]);
+          state.draft = [];
+          setStatus(`${state.selectedDate} saved`, 'success');
+          renderAll();
+          window.PageLoader && window.PageLoader.hide();
+        }, 600);
       }
 
       function clearComposer() {
@@ -803,11 +888,7 @@
         setStatus('Reset complete', 'neutral');
       }
 
-      function shiftMonth(direction) {
-        const delta = direction === 'next' ? 1 : -1;
-        state.monthCursor.setMonth(state.monthCursor.getMonth() + delta);
-        renderCalendar();
-      }
+      function shiftMonth(direction) { const delta = direction === 'next' ? 1 : -1; state.monthCursor.setMonth(state.monthCursor.getMonth() + delta); renderCalendar(); }
 
       focusSelect.addEventListener('change', () => setMovementOptions(focusSelect.value));
       dateInput.addEventListener('change', () => {
@@ -820,9 +901,7 @@
       addButton.addEventListener('click', addEntry);
       saveButton.addEventListener('click', commitDay);
       clearButton.addEventListener('click', clearComposer);
-      monthButtons.forEach((button) => {
-        button.addEventListener('click', () => shiftMonth(button.dataset.trainerMonth));
-      });
+      monthButtons.forEach((button) => { button.addEventListener('click', () => shiftMonth(button.dataset.trainerMonth)); });
       filterMovementSelect.addEventListener('change', renderChart);
       filterMetricSelect.addEventListener('change', renderChart);
 
